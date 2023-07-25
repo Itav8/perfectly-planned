@@ -1,20 +1,17 @@
 from fastapi import FastAPI
-from backend.db import session, Base, engine
-from backend.models.wedding import Wedding
+from backend.db import Base, engine, Session
+from backend.models import wedding
+
+wedding.Base.metadata.create_all(bind=engine)
 
 Base.metadata.create_all(engine)
 
 app = FastAPI()
 
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
-
-
-@app.post("/create")
-async def create_wedding(text: str, is_complete: bool = False):
-    wedding = Wedding(text=text, completed=is_complete)
-    session.add(wedding)
-    session.commit()
-    return {"wedding added": wedding.text}
+def get_db():
+    db = Session()
+    try:
+        yield db
+    finally:
+        db.close()
