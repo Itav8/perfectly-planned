@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from fastapi import (
     APIRouter,
     Depends,
+    HTTPException,
 )
 
 router = APIRouter()
@@ -49,3 +50,23 @@ async def edit_wedding(
         # If the wedding record with the given ID doesn't exist, you can handle the error accordingly.
         # For example, you can raise an HTTPException or return an error message.
         return {"message": "Wedding not found"}
+
+
+@router.delete("/weddings/{wedding_id}", response_model=dict)
+async def delete_wedding(wedding_id: int, db: Session = Depends(get_db)):
+    # Fetch the wedding record from the database
+    existing_wedding = (
+        db.query(WeddingModel).filter(WeddingModel.wedding_id == wedding_id).first()
+    )
+
+    # Check if the wedding record exists
+    if existing_wedding:
+        # Delete the wedding record
+        db.delete(existing_wedding)
+        db.commit()
+
+        # Return a success message
+        return {"message": "Wedding deleted successfully"}
+    else:
+        # If the wedding record with the given ID doesn't exist, raise an HTTPException with status code 404 (Not Found)
+        raise HTTPException(status_code=404, detail="Wedding not found")
