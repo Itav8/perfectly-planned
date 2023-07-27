@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Boolean, DateTime
 from backend.db import Base
 
 
-class Wedding(Base):
+class WeddingModel(Base):
     __tablename__ = "weddings"
 
     wedding_id = Column(Integer, primary_key=True)

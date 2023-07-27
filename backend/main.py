@@ -1,20 +1,15 @@
 from fastapi import FastAPI
 from backend.db import Base, engine
-from backend.models import wedding
+from backend.routers import wedding
 
-
-from sqlalchemy.orm import Session
-
-wedding.Base.metadata.create_all(bind=engine)
 
 Base.metadata.create_all(engine)
 
 app = FastAPI()
 
+app.include_router(wedding.router)
 
-def get_db():
-    db = Session()
-    try:
-        yield db
-    finally:
-        db.close()
+
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
