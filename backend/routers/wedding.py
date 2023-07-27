@@ -1,5 +1,6 @@
 from backend.db import session
 from backend.models.wedding import Wedding
+from backend.schemas import wedding
 from backend.main import app
 from sqlalchemy.orm import Session
 
@@ -10,8 +11,8 @@ async def root():
 
 
 @app.post("/create")
-async def create_wedding(text: str, is_complete: bool = False):
-    wedding = Wedding(text=text, completed=is_complete)
+async def create_wedding(db: Session, text: wedding.text, is_complete: bool = False):
+    wedding = Wedding(**text.dict(), completed=is_complete)
     session.add(wedding)
     session.commit()
     return {"wedding added": wedding.text}

@@ -1,6 +1,9 @@
 from fastapi import FastAPI
-from backend.db import Base, engine, Session
+from backend.db import Base, engine
 from backend.models import wedding
+
+
+from sqlalchemy.orm import Session
 
 wedding.Base.metadata.create_all(bind=engine)
 
