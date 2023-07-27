@@ -70,3 +70,16 @@ async def delete_wedding(wedding_id: int, db: Session = Depends(get_db)):
     else:
         # If the wedding record with the given ID doesn't exist, raise an HTTPException with status code 404 (Not Found)
         raise HTTPException(status_code=404, detail="Wedding not found")
+
+
+@router.get("/weddings/{wedding_id}", response_model=Wedding)
+async def get_wedding(wedding_id: int, db: Session = Depends(get_db)):
+    # Fetch the wedding record from the database
+    wedding = db.query(WeddingModel).filter(WeddingModel.wedding_id == wedding_id).first()
+
+    # Check if the wedding record exists
+    if wedding:
+        return wedding
+    else:
+        # If the wedding record with the given ID doesn't exist, raise an HTTPException with status code 404 (Not Found)
+        raise HTTPException(status_code=404, detail="Wedding not found")
