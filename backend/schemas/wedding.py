@@ -17,3 +17,11 @@ class Wedding(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class WeddingOut(BaseModel):
+    wedding_updated: Wedding
+
+
+class HttpError(BaseModel):
+    message: str

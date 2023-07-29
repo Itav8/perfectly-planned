@@ -1,7 +1,8 @@
 from backend.db import get_db
 from backend.models.wedding import WeddingModel
-from backend.schemas.wedding import Wedding
+from backend.schemas.wedding import HttpError, Wedding, WeddingOut
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import SQLAlchemyError
 
 from fastapi import (
     APIRouter,
@@ -20,12 +21,12 @@ async def create_wedding(wedding: Wedding, db: Session = Depends(get_db)):
     return {"wedding added": wedding}
 
 
-@router.put("/edit/{wedding_id}")
+@router.put("/edit/{wedding_id}", response_model=WeddingOut | HttpError)
 async def edit_wedding(
     wedding_id: int, wedding: Wedding, db: Session = Depends(get_db)
 ):
-    existing_wedding = db.query(WeddingModel).filter(
-        WeddingModel.wedding_id == wedding_id
+    existing_wedding = (
+        db.query(WeddingModel).filter(WeddingModel.wedding_id == wedding_id).first()
     )
 
     if existing_wedding:
@@ -45,7 +46,7 @@ async def edit_wedding(
         db.commit()
 
         # Return the updated wedding details
-        return {"wedding updated": existing_wedding}
+        return {"wedding_updated": existing_wedding}
     else:
         # If the wedding record with the given ID doesn't exist, you can handle the error accordingly.
         # For example, you can raise an HTTPException or return an error message.
@@ -55,27 +56,33 @@ async def edit_wedding(
 @router.delete("/weddings/{wedding_id}", response_model=dict)
 async def delete_wedding(wedding_id: int, db: Session = Depends(get_db)):
     # Fetch the wedding record from the database
-    existing_wedding = (
-        db.query(WeddingModel).filter(WeddingModel.wedding_id == wedding_id).first()
-    )
+    try:
+        existing_wedding = (
+            db.query(WeddingModel).filter(WeddingModel.wedding_id == wedding_id).first()
+        )
 
-    # Check if the wedding record exists
-    if existing_wedding:
-        # Delete the wedding record
-        db.delete(existing_wedding)
-        db.commit()
+        # Check if the wedding record exists
+        if existing_wedding:
+            # Delete the wedding record
+            db.delete(existing_wedding)
+            db.commit()
 
-        # Return a success message
-        return {"message": "Wedding deleted successfully"}
-    else:
-        # If the wedding record with the given ID doesn't exist, raise an HTTPException with status code 404 (Not Found)
-        raise HTTPException(status_code=404, detail="Wedding not found")
+            # Return a success message
+            return {"message": "Wedding deleted successfully"}
+        else:
+            # If the wedding record with the given ID doesn't exist, raise an HTTPException with status code 404 (Not Found)
+            raise HTTPException(status_code=404, detail="Wedding not found")
+    except SQLAlchemyError as e:
+        error = str(e.__dict__["orig"])
+        return error
 
 
 @router.get("/weddings/{wedding_id}", response_model=Wedding)
 async def get_wedding(wedding_id: int, db: Session = Depends(get_db)):
     # Fetch the wedding record from the database
-    wedding = db.query(WeddingModel).filter(WeddingModel.wedding_id == wedding_id).first()
+    wedding = (
+        db.query(WeddingModel).filter(WeddingModel.wedding_id == wedding_id).first()
+    )
 
     # Check if the wedding record exists
     if wedding:
