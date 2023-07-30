@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
+from sqlalchemy.orm import relationship
 from backend.db import Base
 
 
@@ -17,3 +18,5 @@ class WeddingModel(Base):
     wedding_planner = Column(Boolean)
     wedding_photographer = Column(String)
     completed = Column(Boolean, default=False)
+
+    guests = relationship("guests", back_populates="wedding")
