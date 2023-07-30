@@ -4,7 +4,7 @@ from backend.db import Base
 
 
 class WeddingModel(Base):
-    __tablename__ = "Weddings"
+    __tablename__ = "weddings"
 
     wedding_id = Column(Integer, primary_key=True)
     name = Column(String)
