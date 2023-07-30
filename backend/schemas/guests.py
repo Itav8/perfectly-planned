@@ -19,3 +19,11 @@ class Guests(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class GuestOut(BaseModel):
+    guest_updated: Guests
+
+
+class HttpError(BaseModel):
+    message: str
