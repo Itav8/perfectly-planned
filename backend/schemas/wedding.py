@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 
 class Wedding(BaseModel):
-    text: str
+    name: str
     wedding_date: datetime
     wedding_theme: str
     wedding_budget: int

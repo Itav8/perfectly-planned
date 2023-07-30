@@ -4,10 +4,10 @@ from backend.db import Base
 
 
 class WeddingModel(Base):
-    __tablename__ = "weddings"
+    __tablename__ = "Weddings"
 
     wedding_id = Column(Integer, primary_key=True)
-    text = Column(String)
+    name = Column(String)
     wedding_date = Column(DateTime)
     wedding_theme = Column(String)
     wedding_budget = Column(Integer)

@@ -36,7 +36,7 @@ async def edit_wedding(
 
         if existing_wedding:
             # Update the attributes of the existing_wedding object with the new values
-            existing_wedding.text = wedding.text
+            existing_wedding.name = wedding.name
             existing_wedding.wedding_date = wedding.wedding_date
             existing_wedding.wedding_theme = wedding.wedding_theme
             existing_wedding.wedding_budget = wedding.wedding_budget

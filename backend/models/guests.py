@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 from backend.db import Base
 
 
-class WeddingModel(Base):
+class GuestModel(Base):
     __tablename__ = "guests"
 
     guest_id = Column(Integer, primary_key=True)
@@ -21,6 +21,6 @@ class WeddingModel(Base):
     groom_guest = Column(Boolean)
     bridemaids_guest = Column(Boolean)
     groosmen_guest = Column(Boolean)
-    wedding_id = Column(Integer, ForeignKey('wedding_id'))
+    wedding_id = Column(Integer, ForeignKey("wedding_id"))
 
     wedding = relationship("weddings", back_populates="guests")
