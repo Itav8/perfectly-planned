@@ -13,7 +13,7 @@ from fastapi import (
 router = APIRouter()
 
 
-@router.post("/create")
+@router.post("/create-wedding")
 async def create_wedding(wedding: Wedding, db: Session = Depends(get_db)):
     try:
         wedding = WeddingModel(**wedding.dict())

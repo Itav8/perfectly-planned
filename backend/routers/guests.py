@@ -1,4 +1,6 @@
 from backend.db import get_db
+from backend.models.guests import GuestModel
+from backend.schemas.guests import GuestOut, Guests, HttpError
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -7,13 +9,11 @@ from fastapi import (
     Depends,
     HTTPException,
 )
-from backend.models.guests import GuestModel
-from backend.schemas.guests import GuestOut, Guests, HttpError
 
 router = APIRouter()
 
 
-@router.post("/create")
+@router.post("/create-guest")
 async def create_guest(guest: Guests, db: Session = Depends(get_db)):
     try:
         guest = GuestModel(**guest.dict())
@@ -47,6 +47,7 @@ async def edit_guest(guest_id: int, guest: Guests, db: Session = Depends(get_db)
             existing_guest.bride_guest = guest.bride_guest
             existing_guest.groom_guest = guest.groom_guest
             existing_guest.bridemaids_guest = guest.bridemaids_guest
+            existing_guest.groosmen_guest = guest.groosmen_guest
             existing_guest.groosmen_guest = guest.groosmen_guest
             # Commit the changes to the database
             db.commit()
