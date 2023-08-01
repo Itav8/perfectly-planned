@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 
 class Wedding(BaseModel):
-    name: str
+    wedding_name: str
     wedding_date: datetime
     wedding_theme: str
     wedding_budget: int
@@ -14,7 +14,7 @@ class Wedding(BaseModel):
     wedding_planner: bool
     wedding_photographer: str
     completed: bool
-
+    
     class Config:
         orm_mode = True
 

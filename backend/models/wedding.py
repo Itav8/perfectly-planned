@@ -7,7 +7,7 @@ class WeddingModel(Base):
     __tablename__ = "weddings"
 
     wedding_id = Column(Integer, primary_key=True)
-    name = Column(String)
+    wedding_name = Column(String)
     wedding_date = Column(DateTime)
     wedding_theme = Column(String)
     wedding_budget = Column(Integer)
@@ -17,6 +17,6 @@ class WeddingModel(Base):
     wedding_registry = Column(String)
     wedding_planner = Column(Boolean)
     wedding_photographer = Column(String)
-    completed = Column(Boolean, default=False)
+    completed = Column(Boolean)
 
-    guests = relationship("guests", back_populates="wedding")
+    guests = relationship("GuestModel", back_populates="wedding")

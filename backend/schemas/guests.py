@@ -1,18 +1,24 @@
-# from typing import Optional
+from enum import Enum
 from pydantic import BaseModel
+
+
+class Status(str, Enum):
+    pending = "pending"
+    attending = "attending"
+    decline = "decline"
 
 
 class Guests(BaseModel):
     first_name: str
     last_name: str
     address_1: str
-    steet: str
+    street: str
     city: str
     state: str
     zipcode: int
     phone_number: int
     email: str
-    status: bool
+    status: list[Status]
     bride_guest: bool
     groom_guest: bool
     bridemaids_guest: bool

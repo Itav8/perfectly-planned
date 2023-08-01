@@ -10,6 +10,7 @@ app = FastAPI()
 app.include_router(wedding.router)
 app.include_router(guests.router)
 
+
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
