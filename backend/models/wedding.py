@@ -15,8 +15,8 @@ class WeddingModel(Base):
     wedding_venue = Column(String)
     wedding_decorations = Column(String)
     wedding_registry = Column(String)
-    wedding_planner = Column(Boolean)
+    wedding_planner = Column(Boolean, default=False)
     wedding_photographer = Column(String)
-    completed = Column(Boolean)
+    completed = Column(Boolean, default=False)
 
     guests = relationship("GuestModel", back_populates="wedding")

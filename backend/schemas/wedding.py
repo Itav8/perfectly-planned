@@ -11,9 +11,9 @@ class Wedding(BaseModel):
     wedding_venue: str
     wedding_decorations: str
     wedding_registry: str
-    wedding_planner: bool
+    wedding_planner: bool = False
     wedding_photographer: str
-    completed: bool
+    completed: bool = False
 
     class Config:
         orm_mode = True

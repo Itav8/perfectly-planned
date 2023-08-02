@@ -9,7 +9,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 router = APIRouter()
 
 
-@router.post("/create-wedding", response_model=WeddingOut | HttpError)
+@router.post("/create/wedding", response_model=WeddingOut | HttpError)
 async def create_wedding(wedding: Wedding, db: Session = Depends(get_db)):
     try:
         new_wedding = WeddingModel(**wedding.dict())

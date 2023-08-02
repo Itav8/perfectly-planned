@@ -29,6 +29,7 @@ class Guests(BaseModel):
 
 
 class GuestOut(BaseModel):
+    guest_id: int
     guest_updated: Guests
 
 

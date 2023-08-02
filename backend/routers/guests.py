@@ -9,17 +9,22 @@ from fastapi import APIRouter, Depends, HTTPException, status
 router = APIRouter()
 
 
-@router.post("/create-guest")
+@router.post("/create/guest", response_model=GuestOut | HttpError)
 async def create_guest(guest: Guests, db: Session = Depends(get_db)):
     try:
-        guest = GuestModel(**guest.dict())
-        db.add(guest)
+        new_guest = GuestModel(**guest.dict())
+        db.add(new_guest)
         db.commit()
-        return {"Guest added": guest}
+        db.refresh(new_guest)
+
+        guest_out = GuestOut(
+            guest_id=new_guest.guest_id, guest_updated=Guests(**guest.dict())
+        )
+        return guest_out
     except SQLAlchemyError:
         raise HTTPException(
-            status_code=500,
-            detail="Error creating wedding. Please try again later.",
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error creating guest. Please try again later.",
         )
 
 
