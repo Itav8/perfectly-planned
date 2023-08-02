@@ -14,12 +14,13 @@ class Wedding(BaseModel):
     wedding_planner: bool
     wedding_photographer: str
     completed: bool
-    
+
     class Config:
         orm_mode = True
 
 
 class WeddingOut(BaseModel):
+    wedding_id: int
     wedding_updated: Wedding
 
 
