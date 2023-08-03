@@ -2,7 +2,7 @@ from datetime import datetime
 from pydantic import BaseModel
 
 
-class Wedding(BaseModel):
+class WeddingBase(BaseModel):
     wedding_name: str
     wedding_date: datetime
     wedding_theme: str
@@ -15,13 +15,16 @@ class Wedding(BaseModel):
     wedding_photographer: str
     completed: bool = False
 
+
+class Wedding(WeddingBase):
+    wedding_id: int
+
     class Config:
         orm_mode = True
 
 
-class WeddingOut(BaseModel):
-    wedding_id: int
-    wedding_updated: Wedding
+class WeddingCreate(WeddingBase):
+    pass
 
 
 class HttpError(BaseModel):

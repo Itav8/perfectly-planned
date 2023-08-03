@@ -1,6 +1,7 @@
 from backend.db import get_db
 from backend.models.wedding import WeddingModel
-from backend.schemas.wedding import HttpError, Wedding, WeddingOut
+from backend.schemas.response import WeddingOut
+from backend.schemas.wedding import HttpError, WeddingBase, WeddingCreate
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -10,18 +11,18 @@ router = APIRouter()
 
 
 @router.post("/create/wedding", response_model=WeddingOut | HttpError)
-async def create_wedding(wedding: Wedding, db: Session = Depends(get_db)):
+async def create_wedding(wedding: WeddingCreate, db: Session = Depends(get_db)):
     try:
         new_wedding = WeddingModel(**wedding.dict())
         db.add(new_wedding)
         db.commit()
         db.refresh(new_wedding)
 
-        wedding_out = WeddingOut(
-            wedding_id=new_wedding.wedding_id, wedding_updated=Wedding(**wedding.dict())
-        )
+        wedding_out = WeddingOut(wedding_id=new_wedding.wedding_id, **wedding.dict())
+
         return wedding_out
-    except SQLAlchemyError:
+    except SQLAlchemyError as e:
+        print(str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Error creating wedding. Please try again later.",
@@ -30,7 +31,7 @@ async def create_wedding(wedding: Wedding, db: Session = Depends(get_db)):
 
 @router.put("/edit/{wedding_id}", response_model=WeddingOut | HttpError)
 async def edit_wedding(
-    wedding_id: int, wedding: Wedding, db: Session = Depends(get_db)
+    wedding_id: int, wedding: WeddingBase, db: Session = Depends(get_db)
 ):
     try:
         existing_wedding = db.query(WeddingModel).get(wedding_id)
@@ -51,10 +52,7 @@ async def edit_wedding(
             # Commit the changes to the database
             db.commit()
             # Return the updated wedding details
-            return WeddingOut(
-                wedding_id=wedding_id,
-                wedding_updated=Wedding(**wedding.dict()),
-            )
+            return WeddingOut(wedding_id=wedding_id, **wedding.dict())
         else:
             # If the wedding record with the given ID doesn't exist, you can handle the error accordingly.
             # For example, you can raise an HTTPException or return an error message.
@@ -70,9 +68,7 @@ async def edit_wedding(
 async def delete_wedding(wedding_id: int, db: Session = Depends(get_db)):
     # Fetch the wedding record from the database
     try:
-        existing_wedding = (
-            db.query(WeddingModel).get(wedding_id)
-        )
+        existing_wedding = db.query(WeddingModel).get(wedding_id)
 
         # Check if the wedding record exists
         if existing_wedding:
@@ -88,17 +84,15 @@ async def delete_wedding(wedding_id: int, db: Session = Depends(get_db)):
     except SQLAlchemyError:
         raise HTTPException(
             status_code=500,
-            detail="Error creating wedding. Please try again later.",
+            detail="Error deleting wedding. Please try again later.",
         )
 
 
-@router.get("/weddings/{wedding_id}", response_model=Wedding)
+@router.get("/weddings/{wedding_id}", response_model=WeddingOut)
 async def get_wedding(wedding_id: int, db: Session = Depends(get_db)):
     try:
         # Fetch the wedding record from the database
-        wedding = (
-            db.query(WeddingModel).get(wedding_id)
-        )
+        wedding = db.query(WeddingModel).get(wedding_id)
 
         # Check if the wedding record exists
         if wedding:
@@ -109,5 +103,5 @@ async def get_wedding(wedding_id: int, db: Session = Depends(get_db)):
     except SQLAlchemyError:
         raise HTTPException(
             status_code=500,
-            detail="Error creating wedding. Please try again later.",
+            detail="Error wedding not found. Please try again later.",
         )

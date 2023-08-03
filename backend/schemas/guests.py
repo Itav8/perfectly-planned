@@ -8,7 +8,7 @@ class Status(str, Enum):
     decline = "decline"
 
 
-class Guests(BaseModel):
+class GuestBase(BaseModel):
     first_name: str
     last_name: str
     address_1: str
@@ -18,19 +18,23 @@ class Guests(BaseModel):
     zipcode: int
     phone_number: int
     email: str
-    status: list[Status]
+    status: Status
     bride_guest: bool
     groom_guest: bool
-    bridemaids_guest: bool
-    groosmen_guest: bool
+    bridesmaids_guest: bool
+    groomsmen_guest: bool
+
+
+class Guest(GuestBase):
+    wedding_id: int
+    guest_id: int
 
     class Config:
         orm_mode = True
 
 
-class GuestOut(BaseModel):
-    guest_id: int
-    guest_updated: Guests
+class GuestCreate(GuestBase):
+    wedding_id: int
 
 
 class HttpError(BaseModel):

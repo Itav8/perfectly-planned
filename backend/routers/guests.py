@@ -1,27 +1,27 @@
 from backend.db import get_db
 from backend.models.guests import GuestModel
-from backend.schemas.guests import GuestOut, Guests, HttpError
+from backend.schemas.guests import Guest, HttpError, GuestCreate
+from backend.schemas.response import GuestOut
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
+
 router = APIRouter()
 
 
 @router.post("/create/guest", response_model=GuestOut | HttpError)
-async def create_guest(guest: Guests, db: Session = Depends(get_db)):
+async def create_guest(guest: GuestCreate, db: Session = Depends(get_db)):
     try:
         new_guest = GuestModel(**guest.dict())
         db.add(new_guest)
         db.commit()
         db.refresh(new_guest)
 
-        guest_out = GuestOut(
-            guest_id=new_guest.guest_id, guest_updated=Guests(**guest.dict())
-        )
-        return guest_out
-    except SQLAlchemyError:
+        return new_guest
+    except SQLAlchemyError as e:
+        print("WHAT IS THIS", str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Error creating guest. Please try again later.",
@@ -29,11 +29,10 @@ async def create_guest(guest: Guests, db: Session = Depends(get_db)):
 
 
 @router.put("/edit/{guest_id}", response_model=GuestOut | HttpError)
-async def edit_guest(guest_id: int, guest: Guests, db: Session = Depends(get_db)):
+async def edit_guest(guest_id: int, guest: Guest, db: Session = Depends(get_db)):
     try:
-        existing_guest = (
-            db.query(GuestModel).filter(GuestModel.guest_id == guest_id).first()
-        )
+        existing_guest = db.query(GuestModel).get(guest_id)
+        print("EXIST", existing_guest)
 
         if existing_guest:
             # Update the attributes of the existing_guest object with the new values
@@ -49,13 +48,14 @@ async def edit_guest(guest_id: int, guest: Guests, db: Session = Depends(get_db)
             existing_guest.status = guest.status
             existing_guest.bride_guest = guest.bride_guest
             existing_guest.groom_guest = guest.groom_guest
-            existing_guest.bridemaids_guest = guest.bridemaids_guest
-            existing_guest.groosmen_guest = guest.groosmen_guest
-            existing_guest.groosmen_guest = guest.groosmen_guest
+            existing_guest.bridesmaids_guest = guest.bridesmaids_guest
+            existing_guest.groomsmen_guest = guest.groomsmen_guest
+            # existing_guest.wedding_id = guest.wedding_id
             # Commit the changes to the database
             db.commit()
+            print("HERERE", existing_guest, guest)
             # Return the updated guest details
-            return {"guest_updated": existing_guest}
+            return GuestOut(guest_id=guest_id, guest_updated=Guest(**guest.dict()))
         else:
             # If the guest record with the given ID doesn't exist, you can handle the error accordingly.
             # For example, you can raise an HTTPException or return an error message.
@@ -63,39 +63,55 @@ async def edit_guest(guest_id: int, guest: Guests, db: Session = Depends(get_db)
     except SQLAlchemyError:
         raise HTTPException(
             status_code=500,
-            detail="Error creating wedding. Please try again later.",
+            detail="Error updating guest. Please try again later.",
         )
 
 
-@router.get("/guests", response_model=list[Guests])
-async def list_guests(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+@router.get("/list/guests", response_model=list[GuestOut])
+async def list_guests(db: Session = Depends(get_db)):
     try:
-        guests = db.query(GuestModel).offset(skip).limit(limit)
-        return guests.all()
+        guests = db.query(GuestModel).all()
+
+        return guests
     except SQLAlchemyError:
         raise HTTPException(
             status_code=500,
-            detail="Error creating wedding. Please try again later.",
+            detail="Error getting list of guests. Please try again later.",
+        )
+
+
+@router.get("/get/guest/{guest_id}", response_model=GuestOut)
+async def get_guest(guest_id: int, db: Session = Depends(get_db)):
+    try:
+        guest = db.query(GuestModel).get(guest_id)
+
+        if guest:
+            return guest
+        else:
+            raise HTTPException(status_code=404, detail="Guest not found")
+
+    except SQLAlchemyError:
+        raise HTTPException(
+            status_code=500,
+            detail="Error getting guest. Please try again later.",
         )
 
 
 @router.delete("/guests/{guest_id}", response_model=dict)
 async def delete_guest(guest_id: int, db: Session = Depends(get_db)):
     try:
-        existing_guest = (
-            db.query(GuestModel).filter(GuestModel.guest_id == guest_id).first()
-        )
+        existing_guest = db.query(GuestModel).get(guest_id)
 
         if existing_guest:
             db.delete(existing_guest)
             db.commit()
 
-            return {"message": "Wedding deleted successfully"}
+            return {"message": "Guest deleted successfully"}
         else:
             raise HTTPException(status_code=404, detail="Guest not found")
     except SQLAlchemyError:
         # error = str(e)
         raise HTTPException(
             status_code=500,
-            detail="Error creating wedding. Please try again later.",
+            detail="Error deleting guest. Please try again later.",
         )
