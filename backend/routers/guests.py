@@ -21,10 +21,42 @@ async def create_guest(guest: GuestCreate, db: Session = Depends(get_db)):
 
         return new_guest
     except SQLAlchemyError as e:
-        print("WHAT IS THIS", str(e))
+        print(str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Error creating guest. Please try again later.",
+        )
+
+
+@router.get("/guest/{guest_id}", response_model=GuestOut | HttpError)
+async def get_guest(guest_id: int, db: Session = Depends(get_db)):
+    try:
+        guest = db.query(GuestModel).get(guest_id)
+
+        if guest:
+            return guest
+        else:
+            return {"message": "Guest not found"}
+
+    except SQLAlchemyError as e:
+        print(str(e))
+        raise HTTPException(
+            status_code=500,
+            detail="Error getting guest. Please try again later.",
+        )
+
+
+@router.get("/list/guests", response_model=list[GuestOut])
+async def list_guests(db: Session = Depends(get_db)):
+    try:
+        guests = db.query(GuestModel).all()
+
+        return guests
+    except SQLAlchemyError as e:
+        print(str(e))
+        raise HTTPException(
+            status_code=500,
+            detail="Error getting list of guests. Please try again later.",
         )
 
 
@@ -50,7 +82,6 @@ async def edit_guest(guest_id: int, guest: Guest, db: Session = Depends(get_db))
             existing_guest.groom_guest = guest.groom_guest
             existing_guest.bridesmaids_guest = guest.bridesmaids_guest
             existing_guest.groomsmen_guest = guest.groomsmen_guest
-            # existing_guest.wedding_id = guest.wedding_id
             # Commit the changes to the database
             db.commit()
             print("HERERE", existing_guest, guest)
@@ -60,44 +91,15 @@ async def edit_guest(guest_id: int, guest: Guest, db: Session = Depends(get_db))
             # If the guest record with the given ID doesn't exist, you can handle the error accordingly.
             # For example, you can raise an HTTPException or return an error message.
             return {"message": "Guest not found"}
-    except SQLAlchemyError:
+    except SQLAlchemyError as e:
+        print(str(e))
         raise HTTPException(
             status_code=500,
             detail="Error updating guest. Please try again later.",
         )
 
 
-@router.get("/list/guests", response_model=list[GuestOut])
-async def list_guests(db: Session = Depends(get_db)):
-    try:
-        guests = db.query(GuestModel).all()
-
-        return guests
-    except SQLAlchemyError:
-        raise HTTPException(
-            status_code=500,
-            detail="Error getting list of guests. Please try again later.",
-        )
-
-
-@router.get("/get/guest/{guest_id}", response_model=GuestOut)
-async def get_guest(guest_id: int, db: Session = Depends(get_db)):
-    try:
-        guest = db.query(GuestModel).get(guest_id)
-
-        if guest:
-            return guest
-        else:
-            raise HTTPException(status_code=404, detail="Guest not found")
-
-    except SQLAlchemyError:
-        raise HTTPException(
-            status_code=500,
-            detail="Error getting guest. Please try again later.",
-        )
-
-
-@router.delete("/guests/{guest_id}", response_model=dict)
+@router.delete("/delete/{guest_id}", response_model=dict | HttpError)
 async def delete_guest(guest_id: int, db: Session = Depends(get_db)):
     try:
         existing_guest = db.query(GuestModel).get(guest_id)
@@ -108,9 +110,9 @@ async def delete_guest(guest_id: int, db: Session = Depends(get_db)):
 
             return {"message": "Guest deleted successfully"}
         else:
-            raise HTTPException(status_code=404, detail="Guest not found")
-    except SQLAlchemyError:
-        # error = str(e)
+            {"message": "Guest deleted unsuccessfully"}
+    except SQLAlchemyError as e:
+        print(str(e))
         raise HTTPException(
             status_code=500,
             detail="Error deleting guest. Please try again later.",

@@ -18,14 +18,46 @@ async def create_wedding(wedding: WeddingCreate, db: Session = Depends(get_db)):
         db.commit()
         db.refresh(new_wedding)
 
-        wedding_out = WeddingOut(wedding_id=new_wedding.wedding_id, **wedding.dict())
-
-        return wedding_out
+        return new_wedding
     except SQLAlchemyError as e:
         print(str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Error creating wedding. Please try again later.",
+        )
+
+
+@router.get("/wedding/{wedding_id}", response_model=WeddingOut | HttpError)
+async def get_wedding(wedding_id: int, db: Session = Depends(get_db)):
+    try:
+        # Fetch the wedding record from the database
+        wedding = db.query(WeddingModel).get(wedding_id)
+
+        # Check if the wedding record exists
+        if wedding:
+            return wedding
+        else:
+            # If the wedding record with the given ID doesn't exist, raise an HTTPException with status code 404 (Not Found)
+            return {"message": "Wedding not found"}
+    except SQLAlchemyError as e:
+        print(str(e))
+        raise HTTPException(
+            status_code=500,
+            detail="Error wedding not found. Please try again later.",
+        )
+
+
+@router.get("/list/weddings", response_model=list[WeddingOut])
+async def list_weddings(db: Session = Depends(get_db)):
+    try:
+        weddings = db.query(WeddingModel).all()
+
+        return weddings
+    except SQLAlchemyError as e:
+        print(str(e))
+        raise HTTPException(
+            status_code=500,
+            detail="Error getting list of weddings. Please try again later.",
         )
 
 
@@ -57,14 +89,15 @@ async def edit_wedding(
             # If the wedding record with the given ID doesn't exist, you can handle the error accordingly.
             # For example, you can raise an HTTPException or return an error message.
             return {"message": "Wedding not found"}
-    except SQLAlchemyError:
+    except SQLAlchemyError as e:
+        print(str(e))
         raise HTTPException(
             status_code=500,
-            detail="Error creating wedding. Please try again later.",
+            detail="Error updating wedding. Please try again later.",
         )
 
 
-@router.delete("/weddings/{wedding_id}", response_model=dict)
+@router.delete("/delete/{wedding_id}", response_model=dict | HttpError)
 async def delete_wedding(wedding_id: int, db: Session = Depends(get_db)):
     # Fetch the wedding record from the database
     try:
@@ -80,28 +113,10 @@ async def delete_wedding(wedding_id: int, db: Session = Depends(get_db)):
             return {"message": "Wedding deleted successfully"}
         else:
             # If the wedding record with the given ID doesn't exist, raise an HTTPException with status code 404 (Not Found)
-            raise HTTPException(status_code=404, detail="Wedding not found")
-    except SQLAlchemyError:
+            {"message": "Wedding deleted unsuccessfully"}
+    except SQLAlchemyError as e:
+        print(str(e))
         raise HTTPException(
             status_code=500,
             detail="Error deleting wedding. Please try again later.",
-        )
-
-
-@router.get("/weddings/{wedding_id}", response_model=WeddingOut)
-async def get_wedding(wedding_id: int, db: Session = Depends(get_db)):
-    try:
-        # Fetch the wedding record from the database
-        wedding = db.query(WeddingModel).get(wedding_id)
-
-        # Check if the wedding record exists
-        if wedding:
-            return wedding
-        else:
-            # If the wedding record with the given ID doesn't exist, raise an HTTPException with status code 404 (Not Found)
-            raise HTTPException(status_code=404, detail="Wedding not found")
-    except SQLAlchemyError:
-        raise HTTPException(
-            status_code=500,
-            detail="Error wedding not found. Please try again later.",
         )
