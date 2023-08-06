@@ -20,3 +20,4 @@ class WeddingModel(Base):
     completed = Column(Boolean, default=False)
 
     guests = relationship("GuestModel", back_populates="wedding")
+    location = relationship("LocationModel", back_populates="wedding")
