@@ -5,7 +5,12 @@ from sqlalchemy.exc import SQLAlchemyError
 from fastapi import APIRouter, Depends, HTTPException, status
 from backend.models.location import LocationModel
 
-from backend.schemas.location import HttpError, LocationCreate, LocationOut
+from backend.schemas.location import (
+    HttpError,
+    LocationBase,
+    LocationCreate,
+    LocationOut,
+)
 
 
 router = APIRouter()
@@ -62,6 +67,42 @@ async def list_locations(db: Session = Depends(get_db)):
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Error creating location. Please try again later.",
+        )
+
+
+@router.post("/edit/{location_id}", response_model=LocationOut | HttpError)
+async def edit_location(
+    location_id: int, location: LocationBase, db: Session = Depends(get_db)
+):
+    try:
+        existing_location = db.query(LocationModel).get(location_id)
+
+        if existing_location:
+            existing_location.location_name = location.location_name
+            existing_location.location_lat = location.location_lat
+            existing_location.location_long = location.location_long
+            existing_location.location_address = location.location_address
+            existing_location.location_street = location.location_street
+            existing_location.location_city = location.location_city
+            existing_location.location_state = location.location_state
+            existing_location.location_zipcode = location.location_zipcode
+            existing_location.location_phone_number = location.location_phone_number
+            existing_location.location_category = location.location_category
+            existing_location.location_cost = location.location_cost
+            existing_location.location_rating = location.location_rating
+
+            db.commit()
+            db.refresh(existing_location)
+
+            return existing_location
+        else:
+            return {"message": "Location not found"}
+
+    except SQLAlchemyError as e:
+        print(str(e))
+        raise HTTPException(
+            status_code=500,
+            detail="Error updating location. Please try again later.",
         )
 
 

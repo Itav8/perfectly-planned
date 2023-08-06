@@ -1,6 +1,5 @@
 from datetime import datetime
 from pydantic import BaseModel
-from backend.schemas.wedding import Wedding
 from typing import Optional
 
 

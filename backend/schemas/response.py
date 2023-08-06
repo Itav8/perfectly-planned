@@ -1,5 +1,4 @@
 from backend.schemas.guests import Guest
-from backend.schemas.location import Location
 from backend.schemas.wedding import Wedding, WeddingBase
 
 
