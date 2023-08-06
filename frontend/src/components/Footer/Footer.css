@@ -3,7 +3,5 @@
   align-items: center;
   justify-content: center;
   height: 150px;
-  position: fixed;
-  bottom: 0;
   width: 100%;
 }

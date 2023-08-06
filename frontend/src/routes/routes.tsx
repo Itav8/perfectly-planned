@@ -13,7 +13,7 @@ export const mainRoutes = [
   {
     path: "/",
     element: <Landing />,
-    name: "Landing",
+    name: "Home",
   },
   {
     path: "/events",

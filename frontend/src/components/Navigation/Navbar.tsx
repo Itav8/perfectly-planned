@@ -6,13 +6,18 @@ import "./Navbar.css";
 export const Navbar = () => {
   return (
     <div className="navbar">
-      {mainRoutes.map((route) => {
-        return (
-          <NavLink className="navbar__link" key={route.path} to={route.path}>
-            {route.name}
-          </NavLink>
-        );
-      })}
+      <NavLink className="navbar__link navbar__link--logo" to="/">
+        Perfectly Planned
+      </NavLink>
+      <div>
+        {mainRoutes.map((route) => {
+          return (
+            <NavLink className="navbar__link" key={route.path} to={route.path}>
+              {route.name}
+            </NavLink>
+          );
+        })}
+      </div>
     </div>
   );
 };
