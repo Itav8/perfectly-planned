@@ -1,9 +1,13 @@
+from datetime import datetime
 from pydantic import BaseModel
 from backend.schemas.wedding import Wedding
+from typing import Optional
 
 
 class LocationBase(BaseModel):
     location_name: str
+    location_lat: float
+    location_long: float
     location_address: str
     location_street: str
     location_city: str
@@ -11,12 +15,13 @@ class LocationBase(BaseModel):
     location_zipcode: int
     location_phone_number: int
     location_category: str
-    location_cost: int
-    location_rating: int
+    location_cost: float
+    location_rating: float
 
 
 class LocationCreate(LocationBase):
-    wedding_id: int
+    wedding_id: Optional[int]
+    event_id: Optional[int]
 
 
 class Location(LocationBase):
@@ -28,8 +33,7 @@ class Location(LocationBase):
 
 class LocationOut(LocationBase):
     location_id: int
-    wedding_id: int
-    wedding: Wedding = None
+    location_created: datetime
 
 
 class HttpError(BaseModel):

@@ -6,7 +6,6 @@ from backend.schemas.wedding import Wedding, WeddingBase
 class WeddingOut(WeddingBase):
     wedding_id: int
     guests: list[Guest] = []
-    locations: list[Location] = []
 
 
 class GuestOut(Guest):

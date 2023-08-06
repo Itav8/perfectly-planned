@@ -6,7 +6,7 @@ class WeddingBase(BaseModel):
     wedding_name: str
     wedding_date: datetime
     wedding_theme: str
-    wedding_budget: int
+    wedding_budget: float
     wedding_guest: int
     wedding_venue: str
     wedding_decorations: str

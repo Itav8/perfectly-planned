@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Float, DateTime
+from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from backend.db import Base
 
@@ -19,7 +20,6 @@ class LocationModel(Base):
     location_category = Column(String)
     location_cost = Column(Float)
     location_rating = Column(Float)
-    location_created = Column(DateTime)
-    wedding_id = Column(Integer, ForeignKey("weddings.wedding_id"))
-
-    wedding = relationship("WeddingModel", back_populates="location")
+    location_created = Column(DateTime, server_default=func.now())
+    wedding_id = Column(Integer)
+    event_id = Column(Integer)
