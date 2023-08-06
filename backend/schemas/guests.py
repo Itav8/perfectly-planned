@@ -23,6 +23,7 @@ class GuestBase(BaseModel):
     groom_guest: bool
     bridesmaids_guest: bool
     groomsmen_guest: bool
+    event_type: str
 
 
 class Guest(GuestBase):

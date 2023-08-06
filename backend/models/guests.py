@@ -29,5 +29,6 @@ class GuestModel(Base):
     bridesmaids_guest = Column(Boolean)
     groomsmen_guest = Column(Boolean)
     wedding_id = Column(Integer, ForeignKey("weddings.wedding_id"))
+    event_type = Column(String)
 
     wedding = relationship("WeddingModel", back_populates="guests")

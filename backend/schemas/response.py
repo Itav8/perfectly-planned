@@ -1,4 +1,4 @@
-from backend.schemas.guests import Guest, GuestBase
+from backend.schemas.guests import Guest
 from backend.schemas.wedding import Wedding, WeddingBase
 
 
@@ -7,7 +7,7 @@ class WeddingOut(WeddingBase):
     guests: list[Guest] = []
 
 
-class GuestOut(GuestBase):
-    wedding_id: int
-    guest_id: int
+class GuestOut(Guest):
+    # wedding_id: int
+    # guest_id: int
     wedding: Wedding = None

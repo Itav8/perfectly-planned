@@ -66,7 +66,7 @@ async def edit_wedding(
     wedding_id: int, wedding: WeddingBase, db: Session = Depends(get_db)
 ):
     try:
-        existing_wedding = db.query(WeddingModel).get(wedding_id)
+        existing_wedding: WeddingModel = db.query(WeddingModel).get(wedding_id)
 
         if existing_wedding:
             # Update the attributes of the existing_wedding object with the new values
@@ -83,8 +83,9 @@ async def edit_wedding(
             existing_wedding.completed = wedding.completed
             # Commit the changes to the database
             db.commit()
+            db.refresh(existing_wedding)
             # Return the updated wedding details
-            return WeddingOut(wedding_id=wedding_id, **wedding.dict())
+            return existing_wedding
         else:
             # If the wedding record with the given ID doesn't exist, you can handle the error accordingly.
             # For example, you can raise an HTTPException or return an error message.
