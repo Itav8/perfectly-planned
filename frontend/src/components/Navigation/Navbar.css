@@ -1,0 +1,16 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 20px 10px;
+  background-color: #fff;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+.navbar__link {
+  margin: 0 0.5rem;
+}
+
+.navbar__link:hover {
+  color: #969ade;
+
+}
