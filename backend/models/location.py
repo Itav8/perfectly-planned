@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Float, DateTime
 from sqlalchemy.orm import relationship
 from backend.db import Base
 
@@ -8,6 +8,8 @@ class LocationModel(Base):
 
     location_id = Column(Integer, primary_key=True)
     location_name = Column(String)
+    location_lat = Column(Float)
+    location_long = Column(Float)
     location_address = Column(String)
     location_street = Column(String)
     location_city = Column(String)
@@ -15,8 +17,9 @@ class LocationModel(Base):
     location_zipcode = Column(Integer)
     location_phone_number = Column(Integer)
     location_category = Column(String)
-    location_cost = Column(Integer)
-    location_rating = Column(Integer)
+    location_cost = Column(Float)
+    location_rating = Column(Float)
+    location_created = Column(DateTime)
     wedding_id = Column(Integer, ForeignKey("weddings.wedding_id"))
 
     wedding = relationship("WeddingModel", back_populates="location")

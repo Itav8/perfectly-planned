@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, Float
 from sqlalchemy.orm import relationship
 from backend.db import Base
 
@@ -10,7 +10,7 @@ class WeddingModel(Base):
     wedding_name = Column(String)
     wedding_date = Column(DateTime)
     wedding_theme = Column(String)
-    wedding_budget = Column(Integer)
+    wedding_budget = Column(Float)
     wedding_guest = Column(Integer)
     wedding_venue = Column(String)
     wedding_decorations = Column(String)

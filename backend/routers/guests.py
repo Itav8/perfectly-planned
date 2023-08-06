@@ -1,7 +1,5 @@
-from turtle import update
 from backend.db import get_db
 from backend.models.guests import GuestModel
-from backend.models.wedding import WeddingModel
 from backend.schemas.guests import HttpError, GuestCreate, GuestBase
 from backend.schemas.response import GuestOut
 from sqlalchemy.orm import Session
