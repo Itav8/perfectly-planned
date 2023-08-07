@@ -1,21 +1,15 @@
+import os
 # Import necessary modules from SQLAlchemy library
 from sqlalchemy import create_engine
-from sqlalchemy.engine import URL
+from sqlalchemy.engine import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-# Define the database connection URL using PostgreSQL as the driver
-url = URL.create(
-    drivername="postgresql",
-    username="italizvazquez",
-    password="",  # Enter the password for the database here
-    host="localhost",
-    database="perfectly_planned",
-    port=5432,
-)
+# Get the database URL from an environment variable set in docker-compose.yml
+DATABASE_URL = os.environ['DATABASE_URL']
 
 # Create a SQLAlchemy engine with the defined URL
-engine = create_engine(url)
+engine = create_engine(DATABASE_URL)
 
 # Create a sessionmaker to interact with the database
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

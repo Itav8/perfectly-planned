@@ -1,0 +1,24 @@
+# Followed guide here: https://testdriven.io/blog/fastapi-docker-traefik/
+# Best practices for Python Dockerfiles here: https://testdriven.io/blog/docker-best-practices/
+
+# pull official latest base Python 3 image
+FROM python:3
+
+# set work directory
+WORKDIR /app
+
+# set env variables
+# prevents Python from writing pyc files to disc
+ENV PYTHONDONTWRITEBYTECODE 1
+# prevents Python from buffering stdout and stderr
+ENV PYTHONUNBUFFERED 1
+
+# copy requirements.txt to the container and install dependencies 
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+# Copy the rest of project files to the working directory
+COPY . .
+
+#Command to start FastAPI CMD uvicorn backend.main:app --host 0.0.0.0 --reload
+CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--reload"]
