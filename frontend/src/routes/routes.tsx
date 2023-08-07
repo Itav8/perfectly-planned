@@ -3,6 +3,7 @@ import { Landing } from "../pages/Landing/Landing";
 import { Events } from "../pages/Events/Events";
 import { Login } from "../pages/Auth/Login";
 import { Layout } from "../layouts/Layout";
+import { FindPlace } from "../pages/Location/FindPlace";
 
 // We have two types of routes: main routes and authed routes.
 // Main routes are routes that are accessible to everyone, such as the landing page.
@@ -24,6 +25,11 @@ export const mainRoutes = [
     path: "/login",
     element: <Login />,
     name: "Login",
+  },
+  }
+    path: "/findplace",
+    element: <FindPlace />,
+    name: "FindPlace",
   },
 ];
 
