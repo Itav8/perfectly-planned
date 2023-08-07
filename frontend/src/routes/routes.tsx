@@ -26,11 +26,7 @@ export const mainRoutes = [
     element: <Login />,
     name: "Login",
   },
-  }
-    path: "/findplace",
-    element: <FindPlace />,
-    name: "FindPlace",
-  },
+
 ];
 
 const routes = [
