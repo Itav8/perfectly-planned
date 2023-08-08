@@ -1,0 +1,28 @@
+.find-places__search>input {
+  margin-left: 10px;
+  padding: 5px;
+  width: 200px
+}
+
+.find-places__results {
+  width: 300px;
+  background-color: #f6f6ef;
+}
+
+.find-places__results--item {
+  font-size: 12px;
+}
+
+.find-places__results--item:hover {
+  background-color: antiquewhite;
+  cursor: pointer;
+}
+
+.find-places__dashboard {
+  display: flex;
+  gap: 30px;
+}
+
+.find-places__map {
+  margin-top: 30px;
+}

@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from backend.db import Base, engine
 from backend.routers import wedding, guests, location
+from fastapi.middleware.cors import CORSMiddleware
 
 
 Base.metadata.create_all(engine)
@@ -10,6 +11,19 @@ app = FastAPI()
 app.include_router(wedding.router)
 app.include_router(guests.router)
 app.include_router(location.router)
+
+
+origins = [
+    "http://localhost:5173",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")

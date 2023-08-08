@@ -1,10 +1,10 @@
 from backend.db import get_db
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
-
+import requests
 from fastapi import APIRouter, Depends, HTTPException, status
 from backend.models.location import LocationModel
-
+import os
 from backend.schemas.location import (
     HttpError,
     LocationBase,
@@ -12,6 +12,8 @@ from backend.schemas.location import (
     LocationOut,
 )
 
+GOOGLE_MAPS_API_KEY = os.environ["GOOGLE_MAPS_API_KEY"]
+GOOGLE_URL = os.environ["GOOGLE_URL"]
 
 router = APIRouter()
 
@@ -122,10 +124,34 @@ async def delete_location(location_id: int, db: Session = Depends(get_db)):
             return {"message": "Location deleted successfully"}
         else:
             # If the wedding record with the given ID doesn't exist, raise an HTTPException with status code 404 (Not Found)
-            {"message": "Location deleted unsuccessfully"}
+            return {"message": "Location deleted unsuccessfully"}
     except SQLAlchemyError as e:
         print(str(e))
         raise HTTPException(
             status_code=500,
             detail="Error deleting location. Please try again later.",
         )
+
+
+@router.get("/search/location/{query}")
+async def search_location(query: str):
+    url = f"{GOOGLE_URL}/place/autocomplete/json?input={query}&radius=500&key={GOOGLE_MAPS_API_KEY}"
+    payload = {}
+    headers = {}
+
+    response = requests.request("GET", url, headers=headers, data=payload)
+    print(response.json())
+    return response.json()
+
+
+@router.get("/details/location/{place_id}")
+async def location_details(place_id: str):
+    url = (
+        f"{GOOGLE_URL}/place/details/json?place_id={place_id}&key={GOOGLE_MAPS_API_KEY}"
+    )
+    payload = {}
+    headers = {}
+
+    response = requests.request("GET", url, headers=headers, data=payload)
+    print(response.json())
+    return response.json()
