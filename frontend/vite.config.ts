@@ -9,5 +9,7 @@ export default defineConfig({
       usePolling: true, // needed for Docker Container volume mapping to work
     },
     host: true, // needed for the Docker Container port mapping to work
+    strictPort: true,
+    port: 5173,
   },
 });
