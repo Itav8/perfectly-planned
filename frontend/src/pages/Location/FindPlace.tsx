@@ -1,15 +1,32 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useJsApiLoader, GoogleMap } from '@react-google-maps/api';
 
-export const FindPlace = () => {
-  const [googleResults, setGoogleResults] = useState([])
-  const [query, setQuery] = useState('')
-  const [map, setMap] = useState(null);
-  const [center, setCenter] = useState({lat: 0, lng: 0})
+import "./FindPlace.css";
 
-  // For Google Maps Search
+interface GooglePlacesResponse {
+  description: string
+  place_id: string
+  reference: string
+}
+
+export const FindPlace = () => {
+  const [googleResults, setGoogleResults] = useState<Array<GooglePlacesResponse>>([])
+  const [selectedPlace, setSelectedPlace] = useState<GooglePlacesResponse | null>(null)
+  // This will need to be typed, and set after hitting the Place Details API.
+  const [selectedPlaceDetails, setSelectedPlaceDetails] = useState({})
+  const [query, setQuery] = useState<string>('')
+  const [googleMap, setGoogleMap] = useState<google.maps.Map | null>(null);
+  const [center, setCenter] = useState({lat: 0, lng: 0})
+  const [error, setError] = useState<null | string>(null);
+
+  // Load the map
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: `${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`
+  })
+
+  // For Google Places Search
   useEffect (() => {
-    console.log("INSIDE USEEFFECT")
     if (query.length > 2) {
       const fetchData = async () => {
         try {
@@ -28,9 +45,11 @@ export const FindPlace = () => {
             setGoogleResults(data.predictions);
           } else {
             console.log('Error fetching data:', response.statusText);
+            setError('Error fetching data');
           }
         } catch (error) {
           console.log('Error:', error);
+          setError('Error fetching data');
         }
       };
 
@@ -38,37 +57,43 @@ export const FindPlace = () => {
     }
   }, [query])
 
-  const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: `${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`
-  })
-  console.log(import.meta.env)
-  const onLoad = useCallback(function callback(map) {
-    // This is just an example of getting and using the map instance!!! don't just blindly copy!
+
+  useEffect(() => {
+    const handleGeolocationSuccess = (position: GeolocationPosition) => {
+      setCenter({
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      });
+    };
+
+    const handleGeolocationError = () => {
+      setError('Geolocation not supported or permission denied');
+    };
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        handleGeolocationSuccess,
+        handleGeolocationError
+      );
+    } else {
+      setError('Geolocation not supported');
+    }
+  }, []);
+
+  const onLoad = useCallback((map: google.maps.Map) => {
     const bounds = new window.google.maps.LatLngBounds(center);
     map.fitBounds(bounds);
+    setGoogleMap(map);
+  }, [center]);
 
-    setMap(map)
-  }, [])
-
-  const onUnmount = useCallback(function callback(map) {
-    setMap(null)
-  }, [])
-
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition((location) => {
-      console.log("HUH", location)
-    }, () => {
-      console.log("ERROR MESSAGE")
-    });
-  } else {
-    console.log("Geolocation not supported");
-  }
-
+  const onUnmount = useCallback(() => {
+    setGoogleMap(null);
+  }, []);
+  console.log("SELECTED PLACE", selectedPlace)
   return (
-    <div>
+    <div className="find-places">
       <h1>Find Place Page</h1>
-      <div>
+      <div className="find-places__search">
         <label>Location:</label>
         <input
           type='text'
@@ -76,25 +101,30 @@ export const FindPlace = () => {
           id="search-input"
           placeholder='Type address...'
           onChange={(event) => setQuery(event.target.value)}
+          value={query || selectedPlace?.description}
         />
       </div>
-      <div>
-        <h2>Places Found:</h2>
+      <div className="find-places__results">
         {
           googleResults?.map((result, i) => {
-            return <p key={i}>{result.description}</p>
+            return <p className="find-places__results--item" key={i} onClick={() => {
+              setSelectedPlace(result)
+              setQuery("")
+              setGoogleResults([])
+            }}>{result.description}</p>
           })
         }
       </div>
       {
         isLoaded ? (
             <GoogleMap
+              mapContainerClassName="find-places__map"
               mapContainerStyle={{
-                width: '400px',
-                height: '400px'
+                width: '600px',
+                height: '600px'
               }}
               center={center}
-              zoom={10}
+              zoom={2}
               onLoad={onLoad}
               onUnmount={onUnmount}
             >
