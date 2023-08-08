@@ -6,7 +6,9 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=postgresql://perfectly_planned:perfectly_planned_password@db:5432/perfectly_planned
+      DATABASE_URL: postgresql://perfectly_planned:perfectly_planned_password@db:5432/perfectly_planned
+      GOOGLE_MAPS_API_KEY: ${VITE_GOOGLE_MAPS_API_KEY}
+      GOOGLE_URL: ${GOOGLE_URL}
     depends_on:
       - db
   db:
@@ -28,6 +30,8 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
+    environment:
+      VITE_GOOGLE_MAPS_API_KEY: ${VITE_GOOGLE_MAPS_API_KEY}
 # Volumes for persisting data, see https://docs.docker.com/engine/reference/builder/#volume
 volumes:
   postgres_data:
