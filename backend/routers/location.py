@@ -142,3 +142,16 @@ async def search_location(query: str):
     response = requests.request("GET", url, headers=headers, data=payload)
     print(response.json())
     return response.json()
+
+
+@router.get("/details/location/{place_id}")
+async def location_details(place_id: str):
+    url = (
+        f"{GOOGLE_URL}/place/details/json?place_id={place_id}&key={GOOGLE_MAPS_API_KEY}"
+    )
+    payload = {}
+    headers = {}
+
+    response = requests.request("GET", url, headers=headers, data=payload)
+    print(response.json())
+    return response.json()

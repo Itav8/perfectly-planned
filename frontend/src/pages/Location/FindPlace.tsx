@@ -9,11 +9,28 @@ interface GooglePlacesResponse {
   reference: string
 }
 
+interface GooglePlaceDetails {
+  current_opening_hours: Record<string, boolean | Array<string | object>>
+  formatted_address: string
+  formatted_phone_number: string
+  name: string
+  price_level: number
+  rating: number
+  photos: Array<{height: number, width: number, html_attributions: Array<string>}>
+  website: string
+  user_rating_total: number
+  wheelchair_accessible_entrance: boolean
+  reviews: Array<{author_name: string, author_url: string, profile_photo_url: string, rating: number, relative_time_description: string, text: string, time: number}>
+  geometry: {
+    location: {lat: number, lng: number}
+  }
+}
+
 export const FindPlace = () => {
   const [googleResults, setGoogleResults] = useState<Array<GooglePlacesResponse>>([])
   const [selectedPlace, setSelectedPlace] = useState<GooglePlacesResponse | null>(null)
   // This will need to be typed, and set after hitting the Place Details API.
-  const [selectedPlaceDetails, setSelectedPlaceDetails] = useState({})
+  const [selectedPlaceDetails, setSelectedPlaceDetails] = useState<Partial<GooglePlaceDetails>>({})
   const [query, setQuery] = useState<string>('')
   const [googleMap, setGoogleMap] = useState<google.maps.Map | null>(null);
   const [center, setCenter] = useState({lat: 0, lng: 0})
@@ -52,7 +69,6 @@ export const FindPlace = () => {
           setError('Error fetching data');
         }
       };
-
       fetchData()
     }
   }, [query])
@@ -89,7 +105,35 @@ export const FindPlace = () => {
   const onUnmount = useCallback(() => {
     setGoogleMap(null);
   }, []);
-  console.log("SELECTED PLACE", selectedPlace)
+
+  const fetchPlaceDetails = async (placeId: string) => {
+      try {
+        const url = `http://localhost:8000/details/location/${placeId}`
+
+        const fetchConfig = {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+        const response = await fetch(url, fetchConfig);
+        if (response.ok) {
+          const placeDetails = await response.json();
+          setSelectedPlaceDetails(placeDetails.result);
+          setCenter({
+            lat: placeDetails.result.geometry.location.lat,
+            lng: placeDetails.result.geometry.location.lng
+          })
+        } else {
+          console.log('Error fetching place details:', response.statusText);
+          setError('Error fetching place details');
+        }
+      } catch (error) {
+        console.log('Error:', error);
+        setError('Error fetching data');
+      }
+  };
+
   return (
     <div className="find-places">
       <h1>Find Place Page</h1>
@@ -100,7 +144,10 @@ export const FindPlace = () => {
           className='form-control'
           id="search-input"
           placeholder='Type address...'
-          onChange={(event) => setQuery(event.target.value)}
+          onChange={(event) => {
+            setQuery(event.target.value)
+            setSelectedPlace(null)
+          }}
           value={query || selectedPlace?.description}
         />
       </div>
@@ -111,28 +158,40 @@ export const FindPlace = () => {
               setSelectedPlace(result)
               setQuery("")
               setGoogleResults([])
+              fetchPlaceDetails(result.place_id)
             }}>{result.description}</p>
           })
         }
       </div>
-      {
-        isLoaded ? (
-            <GoogleMap
-              mapContainerClassName="find-places__map"
-              mapContainerStyle={{
-                width: '600px',
-                height: '600px'
-              }}
-              center={center}
-              zoom={2}
-              onLoad={onLoad}
-              onUnmount={onUnmount}
-            >
-              { /* Child components, such as markers, info windows, etc. */ }
-              <></>
-            </GoogleMap>
-        ) : <></>
-      }
+      <div className="find-places__dashboard">
+        {
+          isLoaded ? (
+              <GoogleMap
+                mapContainerClassName="find-places__map"
+                mapContainerStyle={{
+                  width: '600px',
+                  height: '600px'
+                }}
+                center={center}
+                zoom={2}
+                onLoad={onLoad}
+                onUnmount={onUnmount}
+              >
+                { /* Child components, such as markers, info windows, etc. */ }
+                <></>
+              </GoogleMap>
+          ) : <></>
+        }
+        <div>
+          <p>{selectedPlaceDetails?.name}</p>
+          <p>{selectedPlaceDetails?.formatted_address}</p>
+          <p>{selectedPlaceDetails?.formatted_phone_number}</p>
+          <p>{selectedPlaceDetails?.rating}</p>
+          <p>{selectedPlaceDetails?.user_rating_total}</p>
+          <a href={selectedPlaceDetails?.website} target="_blank">{selectedPlaceDetails?.website}</a>
+        </div>
+      </div>
+
     </div>
   );
 };

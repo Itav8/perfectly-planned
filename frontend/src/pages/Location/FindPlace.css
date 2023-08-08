@@ -18,6 +18,11 @@
   cursor: pointer;
 }
 
+.find-places__dashboard {
+  display: flex;
+  gap: 30px;
+}
+
 .find-places__map {
   margin-top: 30px;
 }
