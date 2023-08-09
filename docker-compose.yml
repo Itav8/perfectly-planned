@@ -32,6 +32,7 @@ services:
       - /app/node_modules
     environment:
       VITE_GOOGLE_MAPS_API_KEY: ${VITE_GOOGLE_MAPS_API_KEY}
+      VITE_API_URL: ${VITE_API_URL}
 # Volumes for persisting data, see https://docs.docker.com/engine/reference/builder/#volume
 volumes:
   postgres_data:

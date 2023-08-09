@@ -63,12 +63,14 @@ export const FindPlace = () => {
     googleMapsApiKey: `${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`,
   });
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   // For Google Places Search
   useEffect(() => {
     if (query.length > 2) {
       const fetchData = async () => {
         try {
-          const url = `http://localhost:8000/search/location/${query}`;
+          const url = `${apiUrl}/search/location/${query}`;
 
           const fetchConfig = {
             method: "GET",
@@ -119,7 +121,7 @@ export const FindPlace = () => {
   useEffect(() => {
     const fetchPlacePhoto = async (photoRef: string) => {
       try {
-        const url = `http://localhost:8000/photo/location/${photoRef}`;
+        const url = `${apiUrl}/photo/location/${photoRef}`;
 
         const fetchConfig = {
           method: "GET",
@@ -176,7 +178,7 @@ export const FindPlace = () => {
   // Select Place Details
   const fetchPlaceDetails = async (placeId: string) => {
     try {
-      const url = `http://localhost:8000/details/location/${placeId}`;
+      const url = `${apiUrl}/details/location/${placeId}`;
 
       const fetchConfig = {
         method: "GET",

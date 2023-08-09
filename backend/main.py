@@ -15,6 +15,7 @@ app.include_router(location.router)
 
 origins = [
     "http://localhost:5173",
+    "https://perfectly-planned-spa.onrender.com"
 ]
 
 app.add_middleware(
