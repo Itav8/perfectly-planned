@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, Float
 from sqlalchemy.orm import relationship
-from backend.db import Base
+from db import Base
 
 
 class WeddingModel(Base):

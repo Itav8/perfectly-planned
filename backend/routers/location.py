@@ -1,11 +1,11 @@
-from backend.db import get_db
+from db import get_db
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 import requests
 from fastapi import APIRouter, Depends, HTTPException, status
-from backend.models.location import LocationModel
+from models.location import LocationModel
 import os
-from backend.schemas.location import (
+from schemas.location import (
     HttpError,
     LocationBase,
     LocationCreate,

@@ -1,7 +1,7 @@
-from backend.db import get_db
-from backend.models.guests import GuestModel
-from backend.schemas.guests import HttpError, GuestCreate, GuestBase
-from backend.schemas.response import GuestOut
+from db import get_db
+from models.guests import GuestModel
+from schemas.guests import HttpError, GuestCreate, GuestBase
+from schemas.response import GuestOut
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 

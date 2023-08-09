@@ -1,5 +1,5 @@
-from backend.schemas.guests import Guest
-from backend.schemas.wedding import Wedding, WeddingBase
+from schemas.guests import Guest
+from schemas.wedding import Wedding, WeddingBase
 
 
 class WeddingOut(WeddingBase):

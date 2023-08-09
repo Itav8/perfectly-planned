@@ -1,7 +1,7 @@
-from backend.db import get_db
-from backend.models.wedding import WeddingModel
-from backend.schemas.response import WeddingOut
-from backend.schemas.wedding import HttpError, WeddingBase, WeddingCreate
+from db import get_db
+from models.wedding import WeddingModel
+from schemas.response import WeddingOut
+from schemas.wedding import HttpError, WeddingBase, WeddingCreate
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 

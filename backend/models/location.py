@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Float, DateTime
 from sqlalchemy.sql import func
-from backend.db import Base
+from db import Base
 
 
 class LocationModel(Base):

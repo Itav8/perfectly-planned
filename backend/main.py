@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from backend.db import Base, engine
-from backend.routers import wedding, guests, location
+from db import Base, engine
+from routers import wedding, guests, location
 from fastapi.middleware.cors import CORSMiddleware
 
 
