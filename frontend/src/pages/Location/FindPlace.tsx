@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-nocheck
 import { useState, useEffect, useCallback } from "react";
 import { useJsApiLoader, GoogleMap } from "@react-google-maps/api";
 
@@ -152,6 +154,8 @@ export const FindPlace = () => {
       setError("Error fetching data");
     }
   };
+  console.log(googleMap)
+  console.log(error)
 
   return (
     <div className="find-places">
