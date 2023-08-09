@@ -31,6 +31,10 @@ export const mainRoutes = [
     element: <FindPlace />,
     name: "FindPlace",
   },
+  {
+    path: "*",
+    element: <div>Not Found</div>,
+  },
 ];
 
 const routes = [
