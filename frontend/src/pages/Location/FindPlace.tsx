@@ -22,6 +22,7 @@ interface GooglePlaceDetails {
     height: number;
     width: number;
     html_attributions: Array<string>;
+    photo_reference: string;
   }>;
   website: string;
   user_rating_total: number;
@@ -50,6 +51,7 @@ export const FindPlace = () => {
   const [selectedPlaceDetails, setSelectedPlaceDetails] = useState<
     Partial<GooglePlaceDetails>
   >({});
+  const [googlePhotos, setGooglePhotos] = useState<Array<string>>([]);
   const [query, setQuery] = useState<string>("");
   const [googleMap, setGoogleMap] = useState<google.maps.Map | null>(null);
   const [center, setCenter] = useState({ lat: 0, lng: 0 });
@@ -91,7 +93,7 @@ export const FindPlace = () => {
       fetchData();
     }
   }, [query]);
-
+  // handle requesting user location via browser prompt.
   useEffect(() => {
     const handleGeolocationSuccess = (position: GeolocationPosition) => {
       setCenter({
@@ -114,6 +116,50 @@ export const FindPlace = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const fetchPlacePhoto = async (photoRef: string) => {
+      try {
+        const url = `http://localhost:8000/photo/location/${photoRef}`;
+
+        const fetchConfig = {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+        const response = await fetch(url, fetchConfig);
+        if (response.ok) {
+          // get response.text because no json, returns as string
+          const photoData = await response.text();
+          // remove double quotes from base64 encoded string
+          const formattedData = photoData.replace(/"/g, "");
+          return formattedData;
+        } else {
+          console.log("Error fetching place photo:", response.statusText);
+          setError("Error fetching place photo");
+        }
+      } catch (error) {
+        console.log("Error:", error);
+        setError("Error fetching data");
+      }
+    };
+
+    const fetchAllPhotos = async (photos: Array<Promise>) => {
+      //TODO: add try catch
+      const response = await Promise.all(photos);
+      setGooglePhotos(response);
+    };
+
+    if (selectedPlaceDetails?.photos?.length > 0) {
+      const allPhotos = selectedPlaceDetails.photos?.slice(0, 4);
+      const photoPromises = allPhotos?.map((photo) => {
+        return fetchPlacePhoto(photo.photo_reference);
+      });
+
+      fetchAllPhotos(photoPromises);
+    }
+  }, [selectedPlaceDetails?.photos, selectedPlaceDetails?.photos?.length]);
+
   const onLoad = useCallback(
     (map: google.maps.Map) => {
       const bounds = new window.google.maps.LatLngBounds(center);
@@ -127,6 +173,7 @@ export const FindPlace = () => {
     setGoogleMap(null);
   }, []);
 
+  // Select Place Details
   const fetchPlaceDetails = async (placeId: string) => {
     try {
       const url = `http://localhost:8000/details/location/${placeId}`;
@@ -154,12 +201,13 @@ export const FindPlace = () => {
       setError("Error fetching data");
     }
   };
-  console.log(googleMap)
-  console.log(error)
 
+  console.log("googleMap", googleMap);
+  console.log("STATE", googlePhotos);
   return (
     <div className="find-places">
       <h1>Find Place Page</h1>
+      {error}
       <div className="find-places__search">
         <label>Location:</label>
         <input
@@ -220,6 +268,11 @@ export const FindPlace = () => {
           <a href={selectedPlaceDetails?.website} target="_blank">
             {selectedPlaceDetails?.website}
           </a>
+          <div className="find-places__photos">
+            {googlePhotos.map((photo, i) => {
+              return <img key={i} src={`data:image/png;base64,${photo}`} />;
+            })}
+          </div>
         </div>
       </div>
     </div>

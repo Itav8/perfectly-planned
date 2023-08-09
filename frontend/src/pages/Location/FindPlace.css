@@ -18,6 +18,19 @@
   cursor: pointer;
 }
 
+.find-places__photos {
+  display: grid;
+  grid-template-rows: 200px 200px;
+  grid-template-columns: 200px 200px;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.find-places__photos > img {
+  height: 100%;
+  width: 100%;
+}
+
 .find-places__dashboard {
   display: flex;
   gap: 30px;

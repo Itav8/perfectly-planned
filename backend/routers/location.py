@@ -11,6 +11,7 @@ from schemas.location import (
     LocationCreate,
     LocationOut,
 )
+import base64
 
 GOOGLE_MAPS_API_KEY = os.environ["GOOGLE_MAPS_API_KEY"]
 GOOGLE_URL = os.environ["GOOGLE_URL"]
@@ -140,7 +141,6 @@ async def search_location(query: str):
     headers = {}
 
     response = requests.request("GET", url, headers=headers, data=payload)
-    print(response.json())
     return response.json()
 
 
@@ -153,5 +153,21 @@ async def location_details(place_id: str):
     headers = {}
 
     response = requests.request("GET", url, headers=headers, data=payload)
-    print(response.json())
     return response.json()
+
+
+@router.get("/photo/location/{photo_ref}")
+async def location_photos(photo_ref: str):
+    url = f"{GOOGLE_URL}/place/photo?maxwidth=200&photo_reference={photo_ref}&key={GOOGLE_MAPS_API_KEY}"
+    payload = {}
+    headers = {}
+
+    response = requests.request("GET", url, headers=headers, data=payload)
+    # get the response bytes
+    responseBytes = response.content
+    # convert bytes to base64 bytes
+    encodedBytes = base64.b64encode(responseBytes)
+    # convert base64 bytes to base64 string
+    decoded = encodedBytes.decode("utf-8")
+
+    return decoded
