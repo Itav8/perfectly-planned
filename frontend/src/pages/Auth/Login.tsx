@@ -1,8 +1,12 @@
 import { useEffect } from "react";
+// needs firebase(v9) compat to work with firebase ui
 import firebase from "firebase/compat/app";
+// needs to be imported like this to work with ESM (es modules)
 import * as firebaseui from "firebaseui";
 import "firebase/compat/auth";
+// default firebaseui styles
 import "firebaseui/dist/firebaseui.css";
+import "./Login.css";
 
 export const Login = () => {
   useEffect(() => {
@@ -19,9 +23,9 @@ export const Login = () => {
       };
 
       const app = firebase.initializeApp(firebaseConfig);
-
+      // check if firebaseui instance already exists
       let ui = firebaseui.auth.AuthUI.getInstance();
-
+      // if not, create a new one
       if (!ui) ui = new firebaseui.auth.AuthUI(app.auth());
 
       ui.start("#firebaseui-auth-container", {
@@ -39,8 +43,8 @@ export const Login = () => {
   }, []);
 
   return (
-    <div>
-      <h1>Login Page</h1>
+    <div className="login-page">
+      <h1>Login</h1>
       <div id="firebaseui-auth-container"></div>
     </div>
   );
