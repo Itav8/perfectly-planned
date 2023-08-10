@@ -13,15 +13,15 @@ export const Login = () => {
     const setupAuth = () => {
       // For Firebase JS SDK v7.20.0 and later, measurementId is optional
       const firebaseConfig = {
-        apiKey: "AIzaSyBodTJni4xSli2NfAS3BE-DI4TK400AlEY",
-        authDomain: "perfectly-planned-395119.firebaseapp.com",
-        projectId: "perfectly-planned-395119",
-        storageBucket: "perfectly-planned-395119.appspot.com",
-        messagingSenderId: "447075764646",
-        appId: "1:447075764646:web:e255b546a04501afb9e767",
-        measurementId: "G-1TC4219P80",
+        apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+        authDomain: import.meta.env.VITE_GOOGLE_AUTH_DOMAIN,
+        projectId: import.meta.env.VITE_GOOGLE_AUTH_PROJECT_ID,
+        storageBucket: import.meta.env.VITE_GOOGLE_AUTH_STORAGE_BUCKET,
+        messagingSenderId: import.meta.env.VITE_GOOGLE_AUTH_MESSAGING_SENDER_ID,
+        appId: import.meta.env.VITE_GOOGLE_AUTH_APP_ID,
+        measurementId: import.meta.env.VITE_GOOGLE_AUTH_MEASUREMENT_ID,
       };
-
+      console.log(firebaseConfig);
       const app = firebase.initializeApp(firebaseConfig);
       // check if firebaseui instance already exists
       let ui = firebaseui.auth.AuthUI.getInstance();
