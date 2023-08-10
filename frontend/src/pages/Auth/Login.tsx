@@ -21,7 +21,7 @@ export const Login = () => {
         appId: import.meta.env.VITE_GOOGLE_AUTH_APP_ID,
         measurementId: import.meta.env.VITE_GOOGLE_AUTH_MEASUREMENT_ID,
       };
-      console.log(firebaseConfig);
+
       const app = firebase.initializeApp(firebaseConfig);
       // check if firebaseui instance already exists
       let ui = firebaseui.auth.AuthUI.getInstance();
