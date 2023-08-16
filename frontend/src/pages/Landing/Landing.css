@@ -1,0 +1,25 @@
+video {
+  width: 100vw;
+  max-height: 75vh;  
+  overflow: hidden;
+  position: absolute;
+  right: 0;
+  object-fit: cover;
+  object-position: center;
+}
+
+.landing-content {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+  top: 100px;
+  min-height: 75vh;
+  z-index: 1;
+}
+
+h1, button {
+  mix-blend-mode: hard-light;
+  color: white;
+  font-weight: 600;
+}
