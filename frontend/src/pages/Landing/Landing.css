@@ -1,6 +1,6 @@
 video {
   width: 100vw;
-  max-height: 75vh;  
+  max-height: 75vh;
   overflow: hidden;
   position: absolute;
   right: 0;
@@ -18,7 +18,8 @@ video {
   z-index: 1;
 }
 
-h1, button {
+.landing-content>h1,
+button {
   mix-blend-mode: hard-light;
   color: white;
   font-weight: 600;
