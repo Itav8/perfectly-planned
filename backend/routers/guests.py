@@ -14,7 +14,7 @@ router = APIRouter()
 @router.post("/create/guest", response_model=GuestOut | HttpError)
 async def create_guest(guest: GuestCreate, db: Session = Depends(get_db)):
     try:
-        new_guest = GuestModel(**guest.dict())
+        new_guest = GuestModel(**guest.model_dump())
         db.add(new_guest)
         db.commit()
         db.refresh(new_guest)

@@ -35,7 +35,7 @@ class Guest(GuestBase):
 
 
 class GuestCreate(GuestBase):
-    wedding_id: int
+    pass
 
 
 class HttpError(BaseModel):
