@@ -2,6 +2,8 @@
 //@ts-nocheck
 import { useState, useEffect, useCallback } from "react";
 import { useJsApiLoader, GoogleMap } from "@react-google-maps/api";
+import { Loader } from "../../components/Loader/Loader";
+
 import "./FindPlace.css";
 import { SearchInput } from "../../components/SearchInput/SearchInput";
 
@@ -51,6 +53,7 @@ export const FindPlace = () => {
   const [selectedPlaceDetails, setSelectedPlaceDetails] = useState<
     Partial<GooglePlaceDetails>
   >({});
+  const [googlePhotosLoading, setGooglePhotosLoading] = useState<boolean>(true);
   const [query, setQuery] = useState<string>("");
   const [googlePhotos, setGooglePhotos] = useState<Array<string>>([]);
   const [googleMap, setGoogleMap] = useState<google.maps.Map | null>(null);
@@ -62,8 +65,6 @@ export const FindPlace = () => {
     id: "google-map-script",
     googleMapsApiKey: `${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`,
   });
-
-  const apiUrl = import.meta.env.VITE_API_URL;
 
   // handle requesting user location via browser prompt.
   useEffect(() => {
@@ -93,7 +94,9 @@ export const FindPlace = () => {
     if (query.length > 2) {
       const fetchData = async () => {
         try {
-          const url = `${apiUrl}/search/location/${query}`;
+          const url = `${
+            import.meta.env.VITE_API_URL
+          }/search/location/${query}`;
 
           const fetchConfig = {
             method: "GET",
@@ -122,7 +125,9 @@ export const FindPlace = () => {
   useEffect(() => {
     const fetchPlacePhoto = async (photoRef: string) => {
       try {
-        const url = `${apiUrl}/photo/location/${photoRef}`;
+        const url = `${
+          import.meta.env.VITE_API_URL
+        }/photo/location/${photoRef}`;
 
         const fetchConfig = {
           method: "GET",
@@ -149,7 +154,9 @@ export const FindPlace = () => {
 
     const fetchAllPhotos = async (photos: Array<Promise>) => {
       //TODO: add try catch
+      setGooglePhotosLoading(true);
       const response = await Promise.all(photos);
+      setGooglePhotosLoading(false);
       setGooglePhotos(response);
     };
 
@@ -179,7 +186,7 @@ export const FindPlace = () => {
   // Select Place Details
   const fetchPlaceDetails = async (placeId: string) => {
     try {
-      const url = `${apiUrl}/details/location/${placeId}`;
+      const url = `${import.meta.env.VITE_API_URL}/details/location/${placeId}`;
 
       const fetchConfig = {
         method: "GET",
@@ -263,11 +270,15 @@ export const FindPlace = () => {
           <a href={selectedPlaceDetails?.website} target="_blank">
             {selectedPlaceDetails?.website}
           </a>
-          <div className="find-places__photos">
-            {googlePhotos.map((photo, i) => {
-              return <img key={i} src={`data:image/png;base64,${photo}`} />;
-            })}
-          </div>
+          {googlePhotosLoading && selectedPlaceDetails?.photos ? (
+            <Loader />
+          ) : (
+            <div className="find-places__photos">
+              {googlePhotos.map((photo, i) => {
+                return <img key={i} src={`data:image/png;base64,${photo}`} />;
+              })}
+            </div>
+          )}
         </div>
       </div>
     </div>
