@@ -8,4 +8,5 @@ class WeddingOut(WeddingBase):
 
 
 class GuestOut(Guest):
-    wedding: Wedding = None
+    # wedding: Wedding = None
+    pass

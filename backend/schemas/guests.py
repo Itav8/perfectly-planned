@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Optional
 from pydantic import BaseModel
 
 
@@ -27,7 +28,7 @@ class GuestBase(BaseModel):
 
 
 class Guest(GuestBase):
-    wedding_id: int
+    wedding_id: Optional[int]
     guest_id: int
 
     class Config:
