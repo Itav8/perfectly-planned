@@ -5,6 +5,7 @@ import { useJsApiLoader, GoogleMap } from "@react-google-maps/api";
 import { Loader } from "../../components/Loader/Loader";
 
 import "./FindPlace.css";
+import { SearchInput } from "../../components/SearchInput/SearchInput";
 
 interface GooglePlacesResponse {
   description: string;
@@ -52,9 +53,9 @@ export const FindPlace = () => {
   const [selectedPlaceDetails, setSelectedPlaceDetails] = useState<
     Partial<GooglePlaceDetails>
   >({});
-  const [googlePhotos, setGooglePhotos] = useState<Array<string>>([]);
   const [googlePhotosLoading, setGooglePhotosLoading] = useState<boolean>(true);
   const [query, setQuery] = useState<string>("");
+  const [googlePhotos, setGooglePhotos] = useState<Array<string>>([]);
   const [googleMap, setGoogleMap] = useState<google.maps.Map | null>(null);
   const [center, setCenter] = useState({ lat: 0, lng: 0 });
   const [error, setError] = useState<null | string>(null);
@@ -64,6 +65,29 @@ export const FindPlace = () => {
     id: "google-map-script",
     googleMapsApiKey: `${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`,
   });
+
+  // handle requesting user location via browser prompt.
+  useEffect(() => {
+    const handleGeolocationSuccess = (position: GeolocationPosition) => {
+      setCenter({
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      });
+    };
+
+    const handleGeolocationError = () => {
+      setError("Geolocation not supported or permission denied");
+    };
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        handleGeolocationSuccess,
+        handleGeolocationError
+      );
+    } else {
+      setError("Geolocation not supported");
+    }
+  }, []);
 
   // For Google Places Search
   useEffect(() => {
@@ -97,28 +121,6 @@ export const FindPlace = () => {
       fetchData();
     }
   }, [query]);
-  // handle requesting user location via browser prompt.
-  useEffect(() => {
-    const handleGeolocationSuccess = (position: GeolocationPosition) => {
-      setCenter({
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      });
-    };
-
-    const handleGeolocationError = () => {
-      setError("Geolocation not supported or permission denied");
-    };
-
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        handleGeolocationSuccess,
-        handleGeolocationError
-      );
-    } else {
-      setError("Geolocation not supported");
-    }
-  }, []);
 
   useEffect(() => {
     const fetchPlacePhoto = async (photoRef: string) => {
@@ -212,42 +214,34 @@ export const FindPlace = () => {
 
   console.log("googleMap", googleMap);
   console.log("STATE", googlePhotos);
+  const searchInputOnChange = (event) => {
+    console.log("EVENTTTT", event);
+    setQuery(event?.target.value);
+    setSelectedPlace(null);
+  };
+  const getInputResultItemLabel = (item: GooglePlacesResponse) => {
+    return item.description;
+  };
+  const inputResultItemClick = (item: GooglePlacesResponse) => {
+    setSelectedPlace(item);
+    setQuery("");
+    setGoogleResults([]);
+    fetchPlaceDetails(item.place_id);
+  };
+
   return (
     <div className="find-places">
       <h1>Find Place Page</h1>
       {error}
-      <div className="find-places__search">
-        <label>Location:</label>
-        <input
-          type="text"
-          className="form-control"
-          id="search-input"
-          placeholder="Type address..."
-          onChange={(event) => {
-            setQuery(event.target.value);
-            setSelectedPlace(null);
-          }}
-          value={query || selectedPlace?.description}
-        />
-      </div>
-      <div className="find-places__results">
-        {googleResults?.map((result, i) => {
-          return (
-            <p
-              className="find-places__results--item"
-              key={i}
-              onClick={() => {
-                setSelectedPlace(result);
-                setQuery("");
-                setGoogleResults([]);
-                fetchPlaceDetails(result.place_id);
-              }}
-            >
-              {result.description}
-            </p>
-          );
-        })}
-      </div>
+      <SearchInput
+        inputValue={query || selectedPlace?.description}
+        inputLabel="Location:"
+        inputPlaceholder="Type address..."
+        searchInputOnChange={searchInputOnChange}
+        getInputResultItemLabel={getInputResultItemLabel}
+        inputResultItemClick={inputResultItemClick}
+        inputResultItems={googleResults}
+      />
       <div className="find-places__dashboard">
         {isLoaded ? (
           <GoogleMap

@@ -1,0 +1,19 @@
+.search-input__container>input {
+  margin-left: 10px;
+  padding: 5px;
+  width: 200px;
+}
+
+.search-input__items {
+  width: 300px;
+  background-color: #f6f6ef;
+}
+
+.search-input__items--item {
+  font-size: 12px;
+}
+
+.search-input__items--item:hover {
+  background-color: antiquewhite;
+  cursor: pointer;
+}
