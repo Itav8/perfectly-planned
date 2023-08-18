@@ -18,7 +18,7 @@ interface GuestForm {
   eventType: string;
 }
 
-export const GuestForm = () => {
+export const GuestForm = (props: { onSubmit: () => void }) => {
   const [guestForm, setGuestForm] = useState<GuestForm>({
     firstName: "",
     lastName: "",
@@ -115,6 +115,8 @@ export const GuestForm = () => {
           groomsmenGuest: false,
           eventType: "",
         });
+
+        props.onSubmit();
       }
     } catch (error) {
       console.log("Guest Form Error:", error);
