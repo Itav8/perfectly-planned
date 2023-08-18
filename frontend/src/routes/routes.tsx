@@ -4,7 +4,7 @@ import { Events } from "../pages/Events/Events";
 import { Login } from "../pages/Auth/Login";
 import { Layout } from "../layouts/Layout";
 import { FindPlace } from "../pages/Location/FindPlace";
-import { GuestForm } from "../pages/Guests/GuestForm";
+import { Guests } from "../pages/Guests/Guests";
 // We have two types of routes: main routes and authed routes.
 // Main routes are routes that are accessible to everyone, such as the landing page.
 // Authed routes are routes that are only accessible to authenticated users, such as the events page.
@@ -22,9 +22,9 @@ export const mainRoutes = [
     name: "Events",
   },
   {
-    path: "/guest",
-    element: <GuestForm />,
-    name: "Guest",
+    path: "/guests",
+    element: <Guests />,
+    name: "Guests",
   },
   {
     path: "/login",
