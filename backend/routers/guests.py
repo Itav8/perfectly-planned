@@ -35,7 +35,6 @@ async def get_guest(guest_id: int, db: Session = Depends(get_db)):
 
         if guest:
             print("Hello guest", guest.__dict__)
-            print("WEDDING", guest.wedding.__dict__)
             return guest
         else:
             return {"message": "Guest not found"}
@@ -61,8 +60,8 @@ async def list_guests(db: Session = Depends(get_db)):
             detail="Error getting list of guests. Please try again later.",
         )
 
-
-@router.patch("/edit/{guest_id}", response_model=GuestOut | HttpError)
+# broken
+@router.put("/edit/{guest_id}", response_model=GuestOut | HttpError)
 async def edit_guest(guest_id: int, guest: GuestBase, db: Session = Depends(get_db)):
     try:
         existing_guest: GuestModel = db.query(GuestModel).get(guest_id)
@@ -99,56 +98,7 @@ async def edit_guest(guest_id: int, guest: GuestBase, db: Session = Depends(get_
             detail="Error updating guest. Please try again later.",
         )
 
-
-#
-# @router.put("/edit/{guest_id}", response_model=GuestOut | HttpError)
-# async def update_guest(
-#     guest_id: int, guest: GuestBase, db: Session = Depends(get_db)
-# ):
-#     try:
-#         existing_guest = db.query(GuestModel).get(guest_id)
-#         if not existing_guest:
-#             raise HTTPException(
-#                 status_code=status.HTTP_404_NOT_FOUND,
-#                 detail="Guest with the given ID not found.",
-#             )
-
-#         # Update the guest data based on the provided GuestCreate object
-#         existing_guest.first_name = guest.first_name
-#         existing_guest.last_name = guest.last_name
-#         existing_guest.address_1 = guest.address_1
-#         existing_guest.street = guest.street
-#         existing_guest.city = guest.city
-#         existing_guest.state = guest.state
-#         existing_guest.zipcode = guest.zipcode
-#         existing_guest.phone_number = guest.phone_number
-#         existing_guest.email = guest.email
-#         existing_guest.status = guest.status
-#         existing_guest.bride_guest = guest.bride_guest
-#         existing_guest.groom_guest = guest.groom_guest
-#         existing_guest.bridesmaids_guest = guest.bridesmaids_guest
-#         existing_guest.groomsmen_guest = guest.groomsmen_guest
-
-#         db.commit()
-#         db.refresh(existing_guest)
-
-#         # Get the associated wedding if needed
-#         associated_wedding = None
-#         if existing_guest.wedding_id:
-#             associated_wedding = db.query(WeddingModel).get(existing_guest.wedding_id)
-
-#         # Create the response GuestOut object
-#         guest_out = GuestOut(**existing_guest, wedding=associated_wedding)
-
-#         return guest_out
-#     except SQLAlchemyError as e:
-#         print("WHAT IS THIS", str(e))
-#         raise HTTPException(
-#             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-#             detail="Error updating guest. Please try again later.",
-#         )
-
-
+# broken
 @router.delete("/delete/{guest_id}", response_model=dict | HttpError)
 async def delete_guest(guest_id: int, db: Session = Depends(get_db)):
     try:
