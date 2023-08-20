@@ -13,6 +13,7 @@
 
 .navbar__link {
   margin: 0 0.5rem;
+  cursor: pointer;
 }
 
 .navbar__link:hover {
