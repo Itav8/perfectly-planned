@@ -19,4 +19,4 @@ class WeddingModel(Base):
     wedding_photographer = Column(String)
     completed = Column(Boolean, default=False)
 
-    guests = relationship("GuestModel", back_populates="wedding")
+    # guests = relationship("GuestModel", back_populates="wedding")
