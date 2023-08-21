@@ -18,7 +18,7 @@ export const Navbar = () => {
       <NavLink className="navbar__link navbar__link--logo" to="/">
         Perfectly Planned
       </NavLink>
-      <div>
+      <div className="navbar__links">
         {isLoggedIn && (
           <>
             {authedRoutes.map((route) => {
@@ -32,9 +32,18 @@ export const Navbar = () => {
                 </NavLink>
               );
             })}
-            <a className="navbar__link" onClick={onLogoutClick}>
-              Logout
-            </a>
+            <span className="navbar__link--logout">
+              {authData.userData?.photoURL && (
+                <img
+                  className="navbar__link--logout-photo"
+                  src={authData.userData.photoURL}
+                />
+              )}
+
+              <a className="navbar__link" onClick={onLogoutClick}>
+                Logout
+              </a>
+            </span>
           </>
         )}
 

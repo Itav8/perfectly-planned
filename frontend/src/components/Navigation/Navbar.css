@@ -8,7 +8,8 @@
 }
 
 .navbar__links {
-  justify-self: flex-end;
+  display: flex;
+  align-items: center;
 }
 
 .navbar__link {
@@ -23,4 +24,16 @@
 .navbar__link--logo {
   font-weight: bold;
   font-size: 1.5rem;
+}
+
+.navbar__link--logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar__link--logout-photo {
+  border-radius: 50px;
+  width: 30px;
+  height: 30px;
 }
