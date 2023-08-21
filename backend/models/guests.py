@@ -1,4 +1,5 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, Boolean
+from sqlalchemy.orm import relationship
 from db import Base
 from enum import Enum as PyEnum
 
@@ -29,4 +30,6 @@ class GuestModel(Base):
     groomsmen_guest = Column(Boolean)
     wedding_id = Column(Integer)
     event_type = Column(String)
-    # uid = Column(String, ForeignKey("accounts.uid"))
+    account_uid = Column(String, ForeignKey("accounts.uid"))
+
+    account = relationship("AccountModel")

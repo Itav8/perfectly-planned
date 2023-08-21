@@ -33,7 +33,6 @@ async def get_guest(guest_id: int, db: Session = Depends(get_db)):
         guest: GuestModel = db.query(GuestModel).get(guest_id)
 
         if guest:
-            print("Hello guest", guest.__dict__)
             return guest
         else:
             return {"message": "Guest not found"}

@@ -30,7 +30,7 @@ async def create_location(location: LocationCreate, db: Session = Depends(get_db
         return new_location
 
     except SQLAlchemyError as e:
-        print("HII", str(e))
+        print(str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Error creating location. Please try again later.",
@@ -41,7 +41,6 @@ async def create_location(location: LocationCreate, db: Session = Depends(get_db
 async def get_location(location_id: int, db: Session = Depends(get_db)):
     try:
         location = db.query(LocationModel).get(location_id)
-        print("LOCATION", location)
         if location:
             return location
         else:
@@ -59,7 +58,6 @@ async def get_location(location_id: int, db: Session = Depends(get_db)):
 async def list_locations(db: Session = Depends(get_db)):
     try:
         locations = db.query(LocationModel).all()
-        print("LOCATION", locations)
         if locations:
             return locations
         else:
