@@ -5,9 +5,12 @@ import { router } from "./routes/routes.tsx";
 
 // index.css came with Vite by default, we'll keep it here for now.
 import "./index.css";
+import { AuthProvider } from "./hooks/useAuth/useAuth.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>
 );

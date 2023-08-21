@@ -10,7 +10,7 @@ import { Guests } from "../pages/Guests/Guests";
 // Authed routes are routes that are only accessible to authenticated users, such as the events page.
 
 // TODO: Add authed routes.
-export const mainRoutes = [
+export const authedRoutes = [
   {
     path: "/",
     element: <Landing />,
@@ -27,14 +27,26 @@ export const mainRoutes = [
     name: "Guests",
   },
   {
-    path: "/login",
-    element: <Login />,
-    name: "Login",
-  },
-  {
     path: "/findplace",
     element: <FindPlace />,
     name: "FindPlace",
+  },
+  {
+    path: "*",
+    element: <div>Not Found</div>,
+  },
+];
+
+export const mainRoutes = [
+  {
+    path: "/",
+    element: <Landing />,
+    name: "Home",
+  },
+  {
+    path: "/login",
+    element: <Login />,
+    name: "Login",
   },
   {
     path: "*",
@@ -46,6 +58,10 @@ const routes = [
   {
     element: <Layout />,
     children: mainRoutes,
+  },
+  {
+    element: <Layout />,
+    children: authedRoutes,
   },
 ];
 
