@@ -18,6 +18,7 @@ class WeddingBase(BaseModel):
 
 class Wedding(WeddingBase):
     wedding_id: int
+    uid: str
 
     class Config:
         orm_mode = True

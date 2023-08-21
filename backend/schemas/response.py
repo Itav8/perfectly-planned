@@ -1,12 +1,11 @@
 from schemas.guests import Guest
-from schemas.wedding import Wedding, WeddingBase
+from schemas.wedding import WeddingBase
 
 
 class WeddingOut(WeddingBase):
     wedding_id: int
-    # guests: list[Guest] = []
+    uid: str
 
 
 class GuestOut(Guest):
-    # wedding: Wedding = None
     pass
