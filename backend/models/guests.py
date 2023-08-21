@@ -1,5 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, Boolean
 from db import Base
 from enum import Enum as PyEnum
 
@@ -7,7 +6,7 @@ from enum import Enum as PyEnum
 class Status(PyEnum):
     pending = "pending"
     attending = "attending"
-    decline = "decline"
+    declined = "decline"
 
 
 class GuestModel(Base):
@@ -17,11 +16,11 @@ class GuestModel(Base):
     first_name = Column(String)
     last_name = Column(String)
     address_1 = Column(String)
-    street = Column(String)
+    address_2 = Column(String)
     city = Column(String)
     state = Column(String)
-    zipcode = Column(Integer)
-    phone_number = Column(Integer)
+    zipcode = Column(String)
+    phone_number = Column(String)
     email = Column(String)
     status = Column(String, default=Status.pending.value)
     bride_guest = Column(Boolean)
@@ -30,5 +29,4 @@ class GuestModel(Base):
     groomsmen_guest = Column(Boolean)
     wedding_id = Column(Integer)
     event_type = Column(String)
-
-    # wedding = relationship("WeddingModel", back_populates="guests")
+    uid = Column(String)
