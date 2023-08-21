@@ -16,8 +16,8 @@ class GuestBase(BaseModel):
     street: str
     city: str
     state: str
-    zipcode: int
-    phone_number: int
+    zipcode: str
+    phone_number: str
     email: str
     status: Status
     bride_guest: bool
@@ -30,12 +30,17 @@ class GuestBase(BaseModel):
 class Guest(GuestBase):
     wedding_id: Optional[int]
     guest_id: int
+    uid: str
 
     class Config:
         orm_mode = True
 
 
 class GuestCreate(GuestBase):
+    pass
+
+
+class GuestOut(Guest):
     pass
 
 

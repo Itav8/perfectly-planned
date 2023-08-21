@@ -8,7 +8,6 @@ class LocationBase(BaseModel):
     location_lat: float
     location_long: float
     location_address: str
-    location_street: str
     location_city: str
     location_state: str
     location_zipcode: int
@@ -25,6 +24,7 @@ class LocationCreate(LocationBase):
 
 class Location(LocationBase):
     location_id: int
+    uid: str
 
     class Config:
         orm_mode = True

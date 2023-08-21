@@ -1,7 +1,6 @@
 from db import get_db
 from models.guests import GuestModel
-from schemas.guests import HttpError, GuestCreate, GuestBase
-from schemas.response import GuestOut
+from schemas.guests import HttpError, GuestCreate, GuestBase, GuestOut
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -34,7 +33,6 @@ async def get_guest(guest_id: int, db: Session = Depends(get_db)):
         guest: GuestModel = db.query(GuestModel).get(guest_id)
 
         if guest:
-            print("Hello guest", guest.__dict__)
             return guest
         else:
             return {"message": "Guest not found"}
@@ -60,6 +58,7 @@ async def list_guests(db: Session = Depends(get_db)):
             detail="Error getting list of guests. Please try again later.",
         )
 
+
 # broken
 @router.put("/edit/{guest_id}", response_model=GuestOut | HttpError)
 async def edit_guest(guest_id: int, guest: GuestBase, db: Session = Depends(get_db)):
@@ -82,6 +81,7 @@ async def edit_guest(guest_id: int, guest: GuestBase, db: Session = Depends(get_
             existing_guest.groom_guest = guest.groom_guest
             existing_guest.bridesmaids_guest = guest.bridesmaids_guest
             existing_guest.groomsmen_guest = guest.groomsmen_guest
+            existing_guest.event_type = guest.event_type
             # Commit the changes to the database
             db.commit()
             db.refresh(existing_guest)
@@ -97,6 +97,7 @@ async def edit_guest(guest_id: int, guest: GuestBase, db: Session = Depends(get_
             status_code=500,
             detail="Error updating guest. Please try again later.",
         )
+
 
 # broken
 @router.delete("/delete/{guest_id}", response_model=dict | HttpError)
