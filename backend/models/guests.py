@@ -6,7 +6,7 @@ from enum import Enum as PyEnum
 class Status(PyEnum):
     pending = "pending"
     attending = "attending"
-    declined = "decline"
+    declined = "declined"
 
 
 class GuestModel(Base):

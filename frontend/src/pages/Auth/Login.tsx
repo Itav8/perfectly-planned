@@ -9,6 +9,7 @@ import "firebase/compat/auth";
 import "firebaseui/dist/firebaseui.css";
 import "./Login.css";
 
+
 export const Login = () => {
   useEffect(() => {
     const setupAuth = () => {
