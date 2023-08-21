@@ -30,7 +30,7 @@ class WeddingCreate(WeddingBase):
 
 class WeddingOut(WeddingBase):
     wedding_id: int
-    uid: Optional[str]
+    account_uid: Optional[str]
 
 
 class HttpError(BaseModel):

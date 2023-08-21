@@ -10,8 +10,8 @@ class LocationBase(BaseModel):
     location_address: str
     location_city: str
     location_state: str
-    location_zipcode: int
-    location_phone_number: int
+    location_zipcode: str
+    location_phone_number: str
     location_category: str
     location_cost: float
     location_rating: float
@@ -24,7 +24,6 @@ class LocationCreate(LocationBase):
 
 class Location(LocationBase):
     location_id: int
-    uid: str
 
     class Config:
         orm_mode = True
@@ -33,6 +32,7 @@ class Location(LocationBase):
 class LocationOut(LocationBase):
     location_id: int
     location_created: datetime
+    account_uid: str
 
 
 class HttpError(BaseModel):

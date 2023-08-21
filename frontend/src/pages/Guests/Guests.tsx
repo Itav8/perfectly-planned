@@ -7,11 +7,11 @@ interface Guest {
   first_name: string;
   last_name: string;
   address1: string;
-  street: string;
+  address2: string;
   city: string;
   state: string;
-  zipcode: number;
-  phone_number: number;
+  zipcode: string;
+  phone_number: string;
   email: string;
   status: "pending" | "attending" | "declined";
   bride_guest: boolean;
