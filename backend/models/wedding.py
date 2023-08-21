@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, Float
+from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, DateTime, Float
 from db import Base
 
 
@@ -17,4 +17,4 @@ class WeddingModel(Base):
     wedding_planner = Column(Boolean, default=False)
     wedding_photographer = Column(String)
     completed = Column(Boolean, default=False)
-    uid = Column(String)
+    uid = Column(String, ForeignKey("account.uid"))

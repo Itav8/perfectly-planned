@@ -6,4 +6,4 @@ class AccountModel(Base):
     __tablename__ = "accounts"
 
     uid = Column(String, primary_key=True)
-    email = Column(String)
+    email = Column(String, unique=True)

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, DateTime
+from sqlalchemy import Column, ForeignKey, Integer, String, Float, DateTime
 from sqlalchemy.sql import func
 from db import Base
 
@@ -21,4 +21,4 @@ class LocationModel(Base):
     location_created = Column(DateTime, server_default=func.now())
     wedding_id = Column(Integer)
     event_id = Column(Integer)
-    uid = Column(String)
+    uid = Column(String, ForeignKey("account.uid"))
