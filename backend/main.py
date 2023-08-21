@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from db import Base, engine
-from routers import wedding, guests, location
+from routers import wedding, guests, location, account
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -11,7 +11,7 @@ app = FastAPI()
 app.include_router(wedding.router)
 app.include_router(guests.router)
 app.include_router(location.router)
-
+app.include_router(account.router)
 
 origins = [
     "http://localhost:5173",

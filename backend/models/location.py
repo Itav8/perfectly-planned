@@ -21,4 +21,4 @@ class LocationModel(Base):
     location_created = Column(DateTime, server_default=func.now())
     wedding_id = Column(Integer)
     event_id = Column(Integer)
-    uid = Column(String, ForeignKey("account.uid"))
+    # uid = Column(String, ForeignKey("accounts.uid"))

@@ -40,5 +40,9 @@ class GuestCreate(GuestBase):
     pass
 
 
+class GuestOut(Guest):
+    pass
+
+
 class HttpError(BaseModel):
     message: str

@@ -1,7 +1,6 @@
 from db import get_db
 from models.guests import GuestModel
-from schemas.guests import HttpError, GuestCreate, GuestBase
-from schemas.response import GuestOut
+from schemas.guests import HttpError, GuestCreate, GuestBase, GuestOut
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 

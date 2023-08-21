@@ -29,4 +29,4 @@ class GuestModel(Base):
     groomsmen_guest = Column(Boolean)
     wedding_id = Column(Integer)
     event_type = Column(String)
-    uid = Column(String, ForeignKey("account.uid"))
+    # uid = Column(String, ForeignKey("accounts.uid"))

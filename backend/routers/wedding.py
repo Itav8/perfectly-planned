@@ -1,7 +1,6 @@
 from db import get_db
 from models.wedding import WeddingModel
-from schemas.response import WeddingOut
-from schemas.wedding import HttpError, WeddingBase, WeddingCreate
+from schemas.wedding import HttpError, WeddingBase, WeddingCreate, WeddingOut
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -13,7 +12,8 @@ router = APIRouter()
 @router.post("/create/wedding", response_model=WeddingOut | HttpError)
 async def create_wedding(wedding: WeddingCreate, db: Session = Depends(get_db)):
     try:
-        new_wedding = WeddingModel(**wedding.dict())
+        print("INSIDE CREATE", wedding)
+        new_wedding = WeddingModel(**wedding.model_dump())
         db.add(new_wedding)
         db.commit()
         db.refresh(new_wedding)
