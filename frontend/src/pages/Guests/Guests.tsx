@@ -29,6 +29,17 @@ interface Guest {
 }
 
 const columns: GridColDef[] = [
+  {
+    field: "invite",
+    headerName: "Invite",
+    width: 150,
+    // This needs to be updated onClick to hit /guest/invite endpoint
+    renderCell: (params) => {
+      console.log("PARAMS", params);
+      console.log("Params per row", params.row);
+      return <button>Invite</button>;
+    },
+  },
   { field: "first_name", headerName: "First Name", width: 150 },
   { field: "last_name", headerName: "Last Name", width: 150 },
   { field: "address_1", headerName: "Address 1", width: 200 },
@@ -53,9 +64,7 @@ export const Guests = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchGuests = async () => {
-    const guestlistUrl = `${
-      import.meta.env.VITE_API_URL
-    }/guest/list/${userId}`;
+    const guestlistUrl = `${import.meta.env.VITE_API_URL}/guest/list/${userId}`;
 
     try {
       const getGuestsResponse = await fetch(guestlistUrl);
