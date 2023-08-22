@@ -6,14 +6,14 @@ from pydantic import BaseModel
 class Status(str, Enum):
     pending = "pending"
     attending = "attending"
-    decline = "decline"
+    declined = "declined"
 
 
 class GuestBase(BaseModel):
     first_name: str
     last_name: str
     address_1: str
-    street: str
+    address_2: str
     city: str
     state: str
     zipcode: str
@@ -25,19 +25,19 @@ class GuestBase(BaseModel):
     bridesmaids_guest: bool
     groomsmen_guest: bool
     event_type: str
+    account_uid: str
 
 
 class Guest(GuestBase):
     wedding_id: Optional[int]
     guest_id: int
-    uid: str
 
     class Config:
         orm_mode = True
 
 
 class GuestCreate(GuestBase):
-    pass
+    account_uid: str
 
 
 class GuestOut(Guest):

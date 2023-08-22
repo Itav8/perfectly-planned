@@ -212,10 +212,7 @@ export const FindPlace = () => {
     }
   };
 
-  console.log("googleMap", googleMap);
-  console.log("STATE", googlePhotos);
   const searchInputOnChange = (event) => {
-    console.log("EVENTTTT", event);
     setQuery(event?.target.value);
     setSelectedPlace(null);
   };

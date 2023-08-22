@@ -9,7 +9,6 @@ import "firebase/compat/auth";
 import "firebaseui/dist/firebaseui.css";
 import "./Login.css";
 
-
 export const Login = () => {
   useEffect(() => {
     const setupAuth = () => {
@@ -24,7 +23,7 @@ export const Login = () => {
             console.log("Sign in Success Auth Result", authResult);
             console.log("Sign in Success Redirect URL", redirectUrl);
             // Boolean determines if we should redirect after successful login
-            return true;
+            return false;
           },
         },
         signInFlow: "popup",
@@ -39,8 +38,6 @@ export const Login = () => {
       };
 
       ui.start("#firebaseui-auth-container", uiConfig);
-
-      firebase.auth();
     };
 
     setupAuth();

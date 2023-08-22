@@ -10,21 +10,22 @@ class LocationBase(BaseModel):
     location_address: str
     location_city: str
     location_state: str
-    location_zipcode: int
-    location_phone_number: int
+    location_zipcode: str
+    location_phone_number: str
     location_category: str
     location_cost: float
     location_rating: float
+    account_uid: str
 
 
 class LocationCreate(LocationBase):
     wedding_id: Optional[int]
     event_id: Optional[int]
+    account_uid: str
 
 
 class Location(LocationBase):
     location_id: int
-    uid: str
 
     class Config:
         orm_mode = True

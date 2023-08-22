@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 from pydantic import BaseModel
 
 
@@ -15,6 +14,7 @@ class WeddingBase(BaseModel):
     wedding_planner: bool = False
     wedding_photographer: str
     completed: bool = False
+    account_uid: str
 
 
 class Wedding(WeddingBase):
@@ -25,12 +25,11 @@ class Wedding(WeddingBase):
 
 
 class WeddingCreate(WeddingBase):
-    pass
+    account_uid: str
 
 
 class WeddingOut(WeddingBase):
     wedding_id: int
-    uid: Optional[str]
 
 
 class HttpError(BaseModel):

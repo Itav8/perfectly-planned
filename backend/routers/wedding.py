@@ -9,7 +9,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 router = APIRouter()
 
 
-@router.post("/create/wedding", response_model=WeddingOut | HttpError)
+@router.post("/wedding/create", response_model=WeddingOut | HttpError)
 async def create_wedding(wedding: WeddingCreate, db: Session = Depends(get_db)):
     try:
         new_wedding = WeddingModel(**wedding.model_dump())
@@ -26,7 +26,7 @@ async def create_wedding(wedding: WeddingCreate, db: Session = Depends(get_db)):
         )
 
 
-@router.get("/wedding/{wedding_id}", response_model=WeddingOut | HttpError)
+@router.get("/wedding/get/{wedding_id}", response_model=WeddingOut | HttpError)
 async def get_wedding(wedding_id: int, db: Session = Depends(get_db)):
     try:
         # Fetch the wedding record from the database
@@ -46,14 +46,16 @@ async def get_wedding(wedding_id: int, db: Session = Depends(get_db)):
         )
 
 
-@router.get("/list/weddings", response_model=list[WeddingOut] | HttpError)
-async def list_weddings(db: Session = Depends(get_db)):
+@router.get("/wedding/list/{account_uid}", response_model=list[WeddingOut] | HttpError)
+async def list_weddings(account_uid: str, db: Session = Depends(get_db)):
     try:
-        weddings = db.query(WeddingModel).all()
+        weddings = db.query(WeddingModel).filter(
+            WeddingModel.account_uid == account_uid
+        )
         if weddings:
             return weddings
-        else:
-            return {"message": "List is empty"}
+
+        return {"message": "List is empty"}
     except SQLAlchemyError as e:
         print(str(e))
         raise HTTPException(
@@ -62,7 +64,7 @@ async def list_weddings(db: Session = Depends(get_db)):
         )
 
 
-@router.put("/edit/{wedding_id}", response_model=WeddingOut | HttpError)
+@router.put("/wedding/edit/{wedding_id}", response_model=WeddingOut | HttpError)
 async def edit_wedding(
     wedding_id: int, wedding: WeddingBase, db: Session = Depends(get_db)
 ):
@@ -82,6 +84,7 @@ async def edit_wedding(
             existing_wedding.wedding_planner = wedding.wedding_planner
             existing_wedding.wedding_photographer = wedding.wedding_photographer
             existing_wedding.completed = wedding.completed
+            existing_wedding.account_uid = wedding.account_uid
             # Commit the changes to the database
             db.commit()
             db.refresh(existing_wedding)
@@ -99,7 +102,7 @@ async def edit_wedding(
         )
 
 
-@router.delete("/delete/{wedding_id}", response_model=dict | HttpError)
+@router.delete("/wedding/delete/{wedding_id}", response_model=dict | HttpError)
 async def delete_wedding(wedding_id: int, db: Session = Depends(get_db)):
     # Fetch the wedding record from the database
     try:

@@ -10,7 +10,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 router = APIRouter()
 
 
-@router.post("/create/guest", response_model=GuestOut | HttpError)
+@router.post("/guest/create", response_model=GuestOut | HttpError)
 async def create_guest(guest: GuestCreate, db: Session = Depends(get_db)):
     try:
         new_guest = GuestModel(**guest.model_dump())
@@ -27,7 +27,7 @@ async def create_guest(guest: GuestCreate, db: Session = Depends(get_db)):
         )
 
 
-@router.get("/guest/{guest_id}", response_model=GuestOut | HttpError)
+@router.get("/guest/get/{guest_id}", response_model=GuestOut | HttpError)
 async def get_guest(guest_id: int, db: Session = Depends(get_db)):
     try:
         guest: GuestModel = db.query(GuestModel).get(guest_id)
@@ -45,12 +45,15 @@ async def get_guest(guest_id: int, db: Session = Depends(get_db)):
         )
 
 
-@router.get("/list/guests", response_model=list[GuestOut])
-async def list_guests(db: Session = Depends(get_db)):
+@router.get("/guest/list/{account_uid}", response_model=list[GuestOut] | HttpError)
+async def list_guests(account_uid: str, db: Session = Depends(get_db)):
     try:
-        guests = db.query(GuestModel).all()
-
-        return guests
+        guests = db.query(GuestModel).filter(
+            GuestModel.account_uid == account_uid
+        )
+        if guests:
+            return guests
+        return {"message": "List is empty"}
     except SQLAlchemyError as e:
         print(str(e))
         raise HTTPException(
@@ -59,8 +62,7 @@ async def list_guests(db: Session = Depends(get_db)):
         )
 
 
-# broken
-@router.put("/edit/{guest_id}", response_model=GuestOut | HttpError)
+@router.put("/guest/edit/{guest_id}", response_model=GuestOut | HttpError)
 async def edit_guest(guest_id: int, guest: GuestBase, db: Session = Depends(get_db)):
     try:
         existing_guest: GuestModel = db.query(GuestModel).get(guest_id)
@@ -70,7 +72,7 @@ async def edit_guest(guest_id: int, guest: GuestBase, db: Session = Depends(get_
             existing_guest.first_name = guest.first_name
             existing_guest.last_name = guest.last_name
             existing_guest.address_1 = guest.address_1
-            existing_guest.street = guest.street
+            existing_guest.address_2 = guest.address_2
             existing_guest.city = guest.city
             existing_guest.state = guest.state
             existing_guest.zipcode = guest.zipcode
@@ -82,6 +84,7 @@ async def edit_guest(guest_id: int, guest: GuestBase, db: Session = Depends(get_
             existing_guest.bridesmaids_guest = guest.bridesmaids_guest
             existing_guest.groomsmen_guest = guest.groomsmen_guest
             existing_guest.event_type = guest.event_type
+            existing_guest.account_uid = guest.account_uid
             # Commit the changes to the database
             db.commit()
             db.refresh(existing_guest)
@@ -99,8 +102,7 @@ async def edit_guest(guest_id: int, guest: GuestBase, db: Session = Depends(get_
         )
 
 
-# broken
-@router.delete("/delete/{guest_id}", response_model=dict | HttpError)
+@router.delete("/guest/delete/{guest_id}", response_model=dict | HttpError)
 async def delete_guest(guest_id: int, db: Session = Depends(get_db)):
     try:
         existing_guest = db.query(GuestModel).get(guest_id)

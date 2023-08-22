@@ -1,14 +1,15 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { AuthContext } from "../../hooks/useAuth/useAuth";
 
 interface GuestForm {
   firstName: string;
   lastName: string;
   address1: string;
-  street: string;
+  address2: string;
   city: string;
   state: string;
-  zipcode: number;
-  phoneNumber: number;
+  zipcode: string;
+  phoneNumber: string;
   email: string;
   status: "pending" | "attending" | "declined";
   brideGuest: boolean;
@@ -19,15 +20,17 @@ interface GuestForm {
 }
 
 export const GuestForm = (props: { onSubmit: () => void }) => {
+  const { userId } = useContext(AuthContext);
+
   const [guestForm, setGuestForm] = useState<GuestForm>({
     firstName: "",
     lastName: "",
     address1: "",
-    street: "",
+    address2: "",
     city: "",
     state: "",
-    zipcode: 0,
-    phoneNumber: 0,
+    zipcode: "",
+    phoneNumber: "",
     email: "",
     status: "pending",
     brideGuest: false,
@@ -66,13 +69,13 @@ export const GuestForm = (props: { onSubmit: () => void }) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const guestUrl = `${import.meta.env.VITE_API_URL}/create/guest`;
+    const guestUrl = `${import.meta.env.VITE_API_URL}/guest/create`;
 
     const guestData = {
       first_name: guestForm.firstName,
       last_name: guestForm.lastName,
       address_1: guestForm.address1,
-      street: guestForm.street,
+      address_2: guestForm.address2,
       city: guestForm.city,
       state: guestForm.state,
       zipcode: guestForm.zipcode,
@@ -84,6 +87,7 @@ export const GuestForm = (props: { onSubmit: () => void }) => {
       bridesmaids_guest: guestForm.bridesmaidGuest,
       groomsmen_guest: guestForm.groomsmenGuest,
       event_type: guestForm.eventType,
+      account_uid: userId,
     };
 
     const fetchConfig = {
@@ -102,11 +106,11 @@ export const GuestForm = (props: { onSubmit: () => void }) => {
           firstName: "",
           lastName: "",
           address1: "",
-          street: "",
+          address2: "",
           city: "",
           state: "",
-          zipcode: 0,
-          phoneNumber: 0,
+          zipcode: "",
+          phoneNumber: "",
           email: "",
           status: "pending",
           brideGuest: false,
@@ -159,12 +163,12 @@ export const GuestForm = (props: { onSubmit: () => void }) => {
             />
           </div>
           <div>
-            <label htmlFor="street">Street:</label>
+            <label htmlFor="address2">Adress 2:</label>
             <input
               type="text"
-              id="street"
-              name="street"
-              value={guestForm.street}
+              id="address2"
+              name="address2"
+              value={guestForm.address2}
               onChange={handleFormChange}
             />
           </div>
@@ -191,7 +195,7 @@ export const GuestForm = (props: { onSubmit: () => void }) => {
           <div>
             <label htmlFor="zipcode">Zipcode:</label>
             <input
-              type="number"
+              type="text"
               id="zipcode"
               name="zipcode"
               value={guestForm.zipcode}
@@ -201,7 +205,7 @@ export const GuestForm = (props: { onSubmit: () => void }) => {
           <div>
             <label htmlFor="phoneNumber">Phone Number:</label>
             <input
-              type="number"
+              type="text"
               id="phoneNumber"
               name="phoneNumber"
               value={guestForm.phoneNumber}

@@ -1,5 +1,4 @@
 import { createContext, useEffect, useState } from "react";
-
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import { firebaseApp } from "./firebaseConfig";
@@ -11,12 +10,14 @@ interface AuthContextState {
   setAuthState?: (authState: AuthContextState) => void;
 }
 
-export const AuthContext = createContext<AuthContextState>({
+const initialAuthState: AuthContextState = {
   isLoggedIn: false,
   userId: null,
   userData: null,
   setAuthState: () => {},
-});
+};
+
+export const AuthContext = createContext<AuthContextState>(initialAuthState);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   // here is where we will do all our logic for checking if the user is logged in
@@ -30,11 +31,40 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const unsubscribe = firebaseApp.auth().onAuthStateChanged(
       (user) => {
         if (user) {
-          setAuthContextState({
-            isLoggedIn: true,
-            userId: user.uid,
-            userData: user,
-          });
+          const createAccount = async () => {
+            const authData = {
+              email: user.email,
+              uid: user.uid,
+            };
+
+            const fetchUrl = `${import.meta.env.VITE_API_URL}/account`;
+            const fetchConfig = {
+              method: "post",
+              body: JSON.stringify(authData),
+              headers: {
+                "Content-Type": "application/json",
+              },
+            };
+
+            try {
+              const accountResponse = await fetch(fetchUrl, fetchConfig);
+              if (accountResponse.ok) {
+                setAuthContextState({
+                  isLoggedIn: true,
+                  userId: user.uid,
+                  userData: user,
+                });
+                // Redirect user if successfully created account
+                if (window.location.pathname === "/login") {
+                  window.location.href = "/";
+                }
+              }
+            } catch (e) {
+              console.error("Error creating account", e);
+            }
+          };
+
+          createAccount();
         } else {
           setAuthContextState({
             isLoggedIn: false,
@@ -55,7 +85,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     ...authContextState,
     setAuthState: setAuthContextState,
   };
-
+  console.log("AUTH CONTEXT STATE", authContextState);
   return (
     <AuthContext.Provider value={providerValue}>
       {children}

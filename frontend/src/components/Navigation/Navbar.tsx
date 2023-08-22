@@ -8,7 +8,7 @@ import { firebaseApp } from "../../hooks/useAuth/firebaseConfig";
 
 export const Navbar = () => {
   const { isLoggedIn, ...authData } = useContext(AuthContext);
-  console.log("Inside Navbar, Auth Data", authData);
+
   const onLogoutClick = () => {
     firebaseApp.auth().signOut();
   };
