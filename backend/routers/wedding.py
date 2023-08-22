@@ -9,7 +9,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 router = APIRouter()
 
 
-@router.post("/create/wedding", response_model=WeddingOut | HttpError)
+@router.post("/wedding/create", response_model=WeddingOut | HttpError)
 async def create_wedding(wedding: WeddingCreate, db: Session = Depends(get_db)):
     try:
         new_wedding = WeddingModel(**wedding.model_dump())
@@ -26,7 +26,7 @@ async def create_wedding(wedding: WeddingCreate, db: Session = Depends(get_db)):
         )
 
 
-@router.get("/wedding/{wedding_id}", response_model=WeddingOut | HttpError)
+@router.get("/wedding/get/{wedding_id}", response_model=WeddingOut | HttpError)
 async def get_wedding(wedding_id: int, db: Session = Depends(get_db)):
     try:
         # Fetch the wedding record from the database
@@ -46,7 +46,7 @@ async def get_wedding(wedding_id: int, db: Session = Depends(get_db)):
         )
 
 
-@router.get("/list/weddings/{account_uid}", response_model=list[WeddingOut] | HttpError)
+@router.get("/wedding/list/{account_uid}", response_model=list[WeddingOut] | HttpError)
 async def list_weddings(account_uid: str, db: Session = Depends(get_db)):
     try:
         weddings = db.query(WeddingModel).filter(
@@ -64,7 +64,7 @@ async def list_weddings(account_uid: str, db: Session = Depends(get_db)):
         )
 
 
-@router.put("/edit/{wedding_id}", response_model=WeddingOut | HttpError)
+@router.put("/wedding/edit/{wedding_id}", response_model=WeddingOut | HttpError)
 async def edit_wedding(
     wedding_id: int, wedding: WeddingBase, db: Session = Depends(get_db)
 ):
@@ -102,7 +102,7 @@ async def edit_wedding(
         )
 
 
-@router.delete("/delete/{wedding_id}", response_model=dict | HttpError)
+@router.delete("/wedding/delete/{wedding_id}", response_model=dict | HttpError)
 async def delete_wedding(wedding_id: int, db: Session = Depends(get_db)):
     # Fetch the wedding record from the database
     try:

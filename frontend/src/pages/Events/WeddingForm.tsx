@@ -57,7 +57,7 @@ export const WeddingForm = () => {
 
     const weddingUrl = `${
       import.meta.env.VITE_API_URL
-    }/create/wedding`;
+    }/wedding/create`;
 
     const weddingData = {
       wedding_name: weddingForm.weddingName,

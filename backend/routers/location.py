@@ -37,7 +37,7 @@ async def create_location(location: LocationCreate, db: Session = Depends(get_db
         )
 
 
-@router.get("/location/{location_id}", response_model=LocationOut | HttpError)
+@router.get("/location/get/{location_id}", response_model=LocationOut | HttpError)
 async def get_location(location_id: int, db: Session = Depends(get_db)):
     try:
         location = db.query(LocationModel).get(location_id)
@@ -55,7 +55,7 @@ async def get_location(location_id: int, db: Session = Depends(get_db)):
 
 
 # add user id
-@router.get("/locations", response_model=list[LocationOut] | HttpError)
+@router.get("/location/get", response_model=list[LocationOut] | HttpError)
 async def list_locations(db: Session = Depends(get_db)):
     try:
         locations = db.query(LocationModel).all()

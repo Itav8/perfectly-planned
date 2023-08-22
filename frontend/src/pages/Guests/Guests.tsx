@@ -55,7 +55,7 @@ export const Guests = () => {
   const fetchGuests = async () => {
     const guestlistUrl = `${
       import.meta.env.VITE_API_URL
-    }/list/guests/${userId}`;
+    }/guest/list/${userId}`;
 
     try {
       const getGuestsResponse = await fetch(guestlistUrl);

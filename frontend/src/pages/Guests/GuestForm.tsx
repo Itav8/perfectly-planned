@@ -69,7 +69,7 @@ export const GuestForm = (props: { onSubmit: () => void }) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const guestUrl = `${import.meta.env.VITE_API_URL}/create/guest`;
+    const guestUrl = `${import.meta.env.VITE_API_URL}/guest/create`;
 
     const guestData = {
       first_name: guestForm.firstName,

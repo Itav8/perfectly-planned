@@ -10,7 +10,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 router = APIRouter()
 
 
-@router.post("/create/guest", response_model=GuestOut | HttpError)
+@router.post("/guest/create", response_model=GuestOut | HttpError)
 async def create_guest(guest: GuestCreate, db: Session = Depends(get_db)):
     try:
         new_guest = GuestModel(**guest.model_dump())
@@ -27,7 +27,7 @@ async def create_guest(guest: GuestCreate, db: Session = Depends(get_db)):
         )
 
 
-@router.get("/guest/{guest_id}", response_model=GuestOut | HttpError)
+@router.get("/guest/get/{guest_id}", response_model=GuestOut | HttpError)
 async def get_guest(guest_id: int, db: Session = Depends(get_db)):
     try:
         guest: GuestModel = db.query(GuestModel).get(guest_id)
@@ -45,7 +45,7 @@ async def get_guest(guest_id: int, db: Session = Depends(get_db)):
         )
 
 
-@router.get("/list/guests/{account_uid}", response_model=list[GuestOut] | HttpError)
+@router.get("/guest/list/{account_uid}", response_model=list[GuestOut] | HttpError)
 async def list_guests(account_uid: str, db: Session = Depends(get_db)):
     try:
         guests = db.query(GuestModel).filter(
