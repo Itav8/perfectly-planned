@@ -15,6 +15,7 @@ class LocationBase(BaseModel):
     location_category: str
     location_cost: float
     location_rating: float
+    account_uid: str
 
 
 class LocationCreate(LocationBase):

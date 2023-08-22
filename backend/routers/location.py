@@ -22,7 +22,7 @@ router = APIRouter()
 @router.post("/create/location", response_model=LocationOut | HttpError)
 async def create_location(location: LocationCreate, db: Session = Depends(get_db)):
     try:
-        new_location = LocationModel(**location.dict())
+        new_location = LocationModel(**location.model_dump())
         db.add(new_location)
         db.commit()
         db.refresh(new_location)
@@ -54,6 +54,7 @@ async def get_location(location_id: int, db: Session = Depends(get_db)):
         )
 
 
+# add user id
 @router.get("/locations", response_model=list[LocationOut] | HttpError)
 async def list_locations(db: Session = Depends(get_db)):
     try:
@@ -71,19 +72,18 @@ async def list_locations(db: Session = Depends(get_db)):
         )
 
 
-@router.post("/edit/{location_id}", response_model=LocationOut | HttpError)
+@router.put("/location/edit/{location_id}", response_model=LocationOut | HttpError)
 async def edit_location(
     location_id: int, location: LocationBase, db: Session = Depends(get_db)
 ):
     try:
-        existing_location = db.query(LocationModel).get(location_id)
+        existing_location: LocationModel = db.query(LocationModel).get(location_id)
 
         if existing_location:
             existing_location.location_name = location.location_name
             existing_location.location_lat = location.location_lat
             existing_location.location_long = location.location_long
             existing_location.location_address = location.location_address
-            existing_location.location_street = location.location_street
             existing_location.location_city = location.location_city
             existing_location.location_state = location.location_state
             existing_location.location_zipcode = location.location_zipcode
@@ -91,7 +91,7 @@ async def edit_location(
             existing_location.location_category = location.location_category
             existing_location.location_cost = location.location_cost
             existing_location.location_rating = location.location_rating
-
+            existing_location.account_uid = location.account_uid
             db.commit()
             db.refresh(existing_location)
 
@@ -107,7 +107,7 @@ async def edit_location(
         )
 
 
-@router.delete("/delete/{location_id}", response_model=dict | HttpError)
+@router.delete("/location/delete/{location_id}", response_model=dict | HttpError)
 async def delete_location(location_id: int, db: Session = Depends(get_db)):
     # Fetch the wedding record from the database
     try:
