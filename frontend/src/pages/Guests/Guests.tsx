@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import { GuestForm } from "./GuestForm";
 import {
@@ -8,6 +8,7 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
+import { AuthContext } from "../../hooks/useAuth/useAuth";
 interface Guest {
   guest_id: number;
   first_name: string;
@@ -46,11 +47,15 @@ const columns: GridColDef[] = [
 ];
 
 export const Guests = () => {
+  const { userId } = useContext(AuthContext);
+
   const [guests, setGuests] = useState<Guest[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchGuests = async () => {
-    const guestlistUrl = `${import.meta.env.VITE_API_URL}/list/guests`;
+    const guestlistUrl = `${
+      import.meta.env.VITE_API_URL
+    }/list/guests/${userId}`;
 
     try {
       const getGuestsResponse = await fetch(guestlistUrl);
@@ -72,7 +77,7 @@ export const Guests = () => {
 
   useEffect(() => {
     fetchGuests();
-  }, []);
+  }, [userId]);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -110,7 +115,7 @@ export const Guests = () => {
           rows={guests}
           columns={columns}
           slots={{ toolbar: GridToolbar }}
-          pageSizeOptions={[5, 10, 25]}
+          pageSizeOptions={[5, 10, 25, 100]}
         />
       </div>
     </div>

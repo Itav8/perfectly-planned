@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { AuthContext } from "../../hooks/useAuth/useAuth";
 
 interface WeddingForm {
   weddingName: string;
@@ -15,6 +16,8 @@ interface WeddingForm {
 }
 
 export const WeddingForm = () => {
+  const { userId } = useContext(AuthContext);
+
   const [weddingForm, setWeddingForm] = useState<WeddingForm>({
     weddingName: "",
     weddingDate: "",
@@ -52,7 +55,9 @@ export const WeddingForm = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const weddingUrl = `${import.meta.env.VITE_API_URL}/create/wedding`;
+    const weddingUrl = `${
+      import.meta.env.VITE_API_URL
+    }/create/wedding`;
 
     const weddingData = {
       wedding_name: weddingForm.weddingName,
@@ -66,6 +71,7 @@ export const WeddingForm = () => {
       wedding_planner: weddingForm.weddingPlanner,
       wedding_photographer: weddingForm.weddingPhotographer,
       completed: weddingForm.completed,
+      account_uid: userId,
     };
 
     const fetchConfig = {

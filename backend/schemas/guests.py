@@ -25,19 +25,19 @@ class GuestBase(BaseModel):
     bridesmaids_guest: bool
     groomsmen_guest: bool
     event_type: str
+    account_uid: str
 
 
 class Guest(GuestBase):
     wedding_id: Optional[int]
     guest_id: int
-    uid: str
 
     class Config:
         orm_mode = True
 
 
 class GuestCreate(GuestBase):
-    pass
+    account_uid: str
 
 
 class GuestOut(Guest):

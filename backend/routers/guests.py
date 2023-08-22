@@ -45,11 +45,10 @@ async def get_guest(guest_id: int, db: Session = Depends(get_db)):
         )
 
 
-@router.get("/list/guests", response_model=list[GuestOut])
-async def list_guests(db: Session = Depends(get_db)):
+@router.get("/list/guests/{account_uid}", response_model=list[GuestOut])
+async def list_guests(account_uid: str, db: Session = Depends(get_db)):
     try:
-        guests = db.query(GuestModel).all()
-
+        guests = db.query(GuestModel).filter(GuestModel.account_uid == account_uid)
         return guests
     except SQLAlchemyError as e:
         print(str(e))
@@ -70,7 +69,7 @@ async def edit_guest(guest_id: int, guest: GuestBase, db: Session = Depends(get_
             existing_guest.first_name = guest.first_name
             existing_guest.last_name = guest.last_name
             existing_guest.address_1 = guest.address_1
-            existing_guest.street = guest.street
+            existing_guest.address_2 = guest.address_2
             existing_guest.city = guest.city
             existing_guest.state = guest.state
             existing_guest.zipcode = guest.zipcode

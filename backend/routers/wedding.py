@@ -82,6 +82,7 @@ async def edit_wedding(
             existing_wedding.wedding_planner = wedding.wedding_planner
             existing_wedding.wedding_photographer = wedding.wedding_photographer
             existing_wedding.completed = wedding.completed
+            existing_wedding.account_uid = wedding.account_uid
             # Commit the changes to the database
             db.commit()
             db.refresh(existing_wedding)

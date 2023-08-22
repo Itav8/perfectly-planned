@@ -15,6 +15,7 @@ class LocationBase(BaseModel):
     location_category: str
     location_cost: float
     location_rating: float
+    account_uid: str
 
 
 class LocationCreate(LocationBase):
@@ -32,7 +33,6 @@ class Location(LocationBase):
 class LocationOut(LocationBase):
     location_id: int
     location_created: datetime
-    account_uid: str
 
 
 class HttpError(BaseModel):
