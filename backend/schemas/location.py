@@ -15,12 +15,12 @@ class LocationBase(BaseModel):
     location_category: str
     location_cost: float
     location_rating: float
-    account_uid: str
 
 
 class LocationCreate(LocationBase):
     wedding_id: Optional[int]
     event_id: Optional[int]
+    account_uid: str
 
 
 class Location(LocationBase):

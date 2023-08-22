@@ -45,11 +45,15 @@ async def get_guest(guest_id: int, db: Session = Depends(get_db)):
         )
 
 
-@router.get("/list/guests/{account_uid}", response_model=list[GuestOut])
+@router.get("/list/guests/{account_uid}", response_model=list[GuestOut] | HttpError)
 async def list_guests(account_uid: str, db: Session = Depends(get_db)):
     try:
-        guests = db.query(GuestModel).filter(GuestModel.account_uid == account_uid)
-        return guests
+        guests = db.query(GuestModel).filter(
+            GuestModel.account_uid == account_uid
+        )
+        if guests:
+            return guests
+        return {"message": "List is empty"}
     except SQLAlchemyError as e:
         print(str(e))
         raise HTTPException(
@@ -58,8 +62,7 @@ async def list_guests(account_uid: str, db: Session = Depends(get_db)):
         )
 
 
-# broken
-@router.put("/edit/{guest_id}", response_model=GuestOut | HttpError)
+@router.put("/guest/edit/{guest_id}", response_model=GuestOut | HttpError)
 async def edit_guest(guest_id: int, guest: GuestBase, db: Session = Depends(get_db)):
     try:
         existing_guest: GuestModel = db.query(GuestModel).get(guest_id)
@@ -81,6 +84,7 @@ async def edit_guest(guest_id: int, guest: GuestBase, db: Session = Depends(get_
             existing_guest.bridesmaids_guest = guest.bridesmaids_guest
             existing_guest.groomsmen_guest = guest.groomsmen_guest
             existing_guest.event_type = guest.event_type
+            existing_guest.account_uid = guest.account_uid
             # Commit the changes to the database
             db.commit()
             db.refresh(existing_guest)
@@ -98,8 +102,7 @@ async def edit_guest(guest_id: int, guest: GuestBase, db: Session = Depends(get_
         )
 
 
-# broken
-@router.delete("/delete/{guest_id}", response_model=dict | HttpError)
+@router.delete("/guest/delete/{guest_id}", response_model=dict | HttpError)
 async def delete_guest(guest_id: int, db: Session = Depends(get_db)):
     try:
         existing_guest = db.query(GuestModel).get(guest_id)

@@ -46,14 +46,16 @@ async def get_wedding(wedding_id: int, db: Session = Depends(get_db)):
         )
 
 
-@router.get("/list/weddings", response_model=list[WeddingOut] | HttpError)
-async def list_weddings(db: Session = Depends(get_db)):
+@router.get("/list/weddings/{account_uid}", response_model=list[WeddingOut] | HttpError)
+async def list_weddings(account_uid: str, db: Session = Depends(get_db)):
     try:
-        weddings = db.query(WeddingModel).all()
+        weddings = db.query(WeddingModel).filter(
+            WeddingModel.account_uid == account_uid
+        )
         if weddings:
             return weddings
-        else:
-            return {"message": "List is empty"}
+
+        return {"message": "List is empty"}
     except SQLAlchemyError as e:
         print(str(e))
         raise HTTPException(

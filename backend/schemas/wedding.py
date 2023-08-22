@@ -25,7 +25,7 @@ class Wedding(WeddingBase):
 
 
 class WeddingCreate(WeddingBase):
-    pass
+    account_uid: str
 
 
 class WeddingOut(WeddingBase):
