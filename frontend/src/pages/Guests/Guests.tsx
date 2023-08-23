@@ -1,14 +1,10 @@
 import { useState, useEffect, useContext } from "react";
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import { GuestForm } from "./GuestForm";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-} from "@mui/material";
+
 import { AuthContext } from "../../hooks/useAuth/useAuth";
+import { Modal } from "../../components/Modal/Modal";
+
 interface Guest {
   guest_id: number;
   first_name: string;
@@ -99,26 +95,15 @@ export const Guests = () => {
   return (
     <div>
       <h1>Guests</h1>
-      <Button variant="contained" onClick={openModal}>
-        Add Guest
-      </Button>
-
-      <Dialog open={isModalOpen} onClose={closeModal}>
-        <DialogTitle>Add Guest</DialogTitle>
-        <DialogContent>
-          <GuestForm
-            onSubmit={() => {
-              fetchGuests();
-              closeModal();
-            }}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeModal} color="primary">
-            Cancel
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <button onClick={openModal}>CLICK</button>
+      <Modal open={isModalOpen} onClose={closeModal}>
+        <GuestForm
+          onSubmit={() => {
+            fetchGuests();
+            closeModal();
+          }}
+        />
+      </Modal>
       <div style={{ height: 300, width: "100%" }}>
         <DataGrid
           rows={guests}

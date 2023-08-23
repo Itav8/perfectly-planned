@@ -1,0 +1,27 @@
+.card {
+  background-color: grey;
+  border: solid black 5px;
+  width: 250px;
+  height: 300px;
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.card__content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.card__title {
+  font-size: 1.9rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.card__date {
+  align-self: flex-end;
+  position: relative;
+  top: 60px;
+}
