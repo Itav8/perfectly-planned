@@ -3,6 +3,7 @@ interface CardInfoProps {
   cardTitle?: string;
   cardDate?: string;
   cardStatus?: boolean;
+  children?: React.ReactNode;
 }
 export const Card = (props: CardInfoProps) => {
   return (

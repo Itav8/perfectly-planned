@@ -5,6 +5,7 @@ import { GuestForm } from "./GuestForm";
 import { AuthContext } from "../../hooks/useAuth/useAuth";
 import { Modal } from "../../components/Modal/Modal";
 
+import "./Guest.css";
 interface Guest {
   guest_id: number;
   first_name: string;
@@ -95,7 +96,6 @@ export const Guests = () => {
   return (
     <div>
       <h1>Guests</h1>
-      <button onClick={openModal}>CLICK</button>
       <Modal open={isModalOpen} onClose={closeModal}>
         <GuestForm
           onSubmit={() => {
@@ -104,7 +104,10 @@ export const Guests = () => {
           }}
         />
       </Modal>
-      <div style={{ height: 300, width: "100%" }}>
+      <button className="guest__button" onClick={openModal}>
+        Add Guest
+      </button>
+      <div className="guest__table" style={{ height: 300, width: "100%" }}>
         <DataGrid
           rows={guests}
           columns={columns}
