@@ -3,7 +3,7 @@ from models.guests import GuestModel
 from schemas.guests import HttpError, GuestCreate, GuestBase, GuestOut
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
-
+from services.email_service.sender import publish_message
 from fastapi import APIRouter, Depends, HTTPException, status
 
 
@@ -118,3 +118,9 @@ async def delete_guest(guest_id: int, db: Session = Depends(get_db)):
             status_code=500,
             detail="Error deleting guest. Please try again later.",
         )
+
+
+@router.post("/guest/invite")
+async def invite_guest(message: dict):
+    publish_message(message)
+    return message
