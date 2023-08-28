@@ -48,9 +48,7 @@ async def get_guest(guest_id: int, db: Session = Depends(get_db)):
 @router.get("/guest/list/{account_uid}", response_model=list[GuestOut] | HttpError)
 async def list_guests(account_uid: str, db: Session = Depends(get_db)):
     try:
-        guests = db.query(GuestModel).filter(
-            GuestModel.account_uid == account_uid
-        )
+        guests = db.query(GuestModel).filter(GuestModel.account_uid == account_uid)
         if guests:
             return guests
         return {"message": "List is empty"}
