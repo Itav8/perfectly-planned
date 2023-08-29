@@ -1,11 +1,11 @@
+from fastapi.encoders import jsonable_encoder
 from db import get_db
 from models.guests import GuestModel
-from schemas.guests import HttpError, GuestCreate, GuestBase, GuestOut
+from schemas.guests import HttpError, GuestCreate, GuestBase, GuestOut, GuestInvite
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from services.email_service.sender import publish_message
 from fastapi import APIRouter, Depends, HTTPException, status
-
 
 router = APIRouter()
 
@@ -120,7 +120,14 @@ async def delete_guest(guest_id: int, db: Session = Depends(get_db)):
         )
 
 
-@router.post("/guest/invite")
-async def invite_guest(message: dict):
-    publish_message(message)
-    return message
+@router.post("/guest/invite", response_model=dict | HttpError)
+async def invite_guest(message: GuestInvite):
+    try:
+        publish_message(jsonable_encoder(message))
+        return {"message": "Sent successfully"}
+    except SQLAlchemyError as e:
+        print(str(e))
+        raise HTTPException(
+            status_code=500,
+            detail="Error sending email. Please try again later.",
+        )

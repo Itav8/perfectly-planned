@@ -44,5 +44,11 @@ class GuestOut(Guest):
     pass
 
 
+class GuestInvite(BaseModel):
+    email: str
+    subject: str
+    message: str
+
+
 class HttpError(BaseModel):
     message: str
