@@ -4,9 +4,18 @@ import { WeddingForm } from "./WeddingForm";
 import { AuthContext } from "../../hooks/useAuth/useAuth";
 import { Modal } from "../../components/Modal/Modal";
 
+import "./Event.css";
 interface Wedding {
   wedding_name: string;
   wedding_date: string;
+  wedding_theme: string;
+  wedding_budget: number;
+  wedding_guest: number;
+  wedding_venue: string;
+  wedding_decorations: string;
+  wedding_registry: string;
+  wedding_planner: boolean;
+  wedding_photographer: string;
   completed: boolean;
 }
 
@@ -69,15 +78,23 @@ export const Events = () => {
           />
         </Modal>
       ) : null}
-
-      {weddings.map((wedding, index) => (
-        <Card
-          key={index}
-          cardTitle={wedding.wedding_name}
-          cardDate={wedding.wedding_date}
-          cardStatus={wedding.completed}
-        />
-      ))}
+      <div className="event__card">
+        {weddings.map((wedding, index) => (
+          <Card
+            key={index}
+            cardTitle={wedding.wedding_name}
+            cardDate={wedding.wedding_date}
+            cardStatus={wedding.completed}
+            cardTheme={wedding.wedding_theme}
+            cardBudget={wedding.wedding_budget}
+            cardGuest={wedding.wedding_guest}
+            cardVenue={wedding.wedding_venue}
+            cardRegistry={wedding.wedding_registry}
+            cardPlanner={wedding.wedding_planner}
+            cardPhotographer={wedding.wedding_photographer}
+          />
+        ))}
+      </div>
     </div>
   );
 };
