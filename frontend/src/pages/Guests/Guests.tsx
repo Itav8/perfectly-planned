@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import { GuestForm } from "./GuestForm";
 
@@ -111,7 +111,7 @@ export const Guests = () => {
     { field: "event_type", headerName: "Event Type", width: 150 },
   ];
 
-  const fetchGuests = async () => {
+  const fetchGuests = useCallback(async () => {
     const guestlistUrl = `${import.meta.env.VITE_API_URL}/guest/list/${userId}`;
 
     try {
@@ -129,12 +129,13 @@ export const Guests = () => {
     } catch (error) {
       console.log("Guest List Error:", error);
     }
-  };
+  }, [userId]);
 
   useEffect(() => {
-    fetchGuests();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId]);
+    if (userId) {
+      fetchGuests();
+    }
+  }, [fetchGuests, userId]);
 
   const openModal = () => {
     setIsModalOpen(true);
