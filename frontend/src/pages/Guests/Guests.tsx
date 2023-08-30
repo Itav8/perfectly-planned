@@ -79,6 +79,18 @@ export const Guests = () => {
         );
       },
     },
+    {
+      field: "delete",
+      headerName: "Delete",
+      width: 150,
+      renderCell: (params) => {
+        return (
+          <button onClick={(e) => handleDelete(e, params.row.guest_id)}>
+            Delete
+          </button>
+        );
+      },
+    },
     { field: "first_name", headerName: "First Name", width: 150 },
     { field: "last_name", headerName: "Last Name", width: 150 },
     { field: "address_1", headerName: "Address 1", width: 200 },
@@ -162,6 +174,35 @@ export const Guests = () => {
     }
   };
 
+  const handleDelete = async (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    guestId: number
+  ) => {
+    event.preventDefault();
+
+    const deleteGuest = `${
+      import.meta.env.VITE_API_URL
+    }/guest/delete/${guestId}`;
+
+    const fetchConfig = {
+      method: "delete",
+      headers: {
+        "Content-Type": "application",
+      },
+    };
+
+    try {
+      const deleteGuestResponse = await fetch(deleteGuest, fetchConfig);
+
+      if (deleteGuestResponse.ok) {
+        console.log("Guest deleted successfully");
+        fetchGuests();
+      }
+    } catch (error) {
+      console.log("Error deleting guest", error);
+    }
+  };
+
   return (
     <div>
       <h1>Guests</h1>
@@ -181,7 +222,7 @@ export const Guests = () => {
           open={isEditModalOpen}
           onClose={() => {
             setIsEditModalOpen(false);
-            setSelectedGuest(undefined)
+            setSelectedGuest(undefined);
           }}
         >
           <GuestForm
@@ -189,7 +230,7 @@ export const Guests = () => {
             initialValues={selectedGuest}
             onSubmit={() => {
               fetchGuests();
-              setIsEditModalOpen(false)
+              setIsEditModalOpen(false);
               setSelectedGuest(undefined);
             }}
           />
