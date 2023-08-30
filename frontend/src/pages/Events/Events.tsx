@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Card } from "../../components/Card/Card";
 import { WeddingForm } from "./WeddingForm";
 import { AuthContext } from "../../hooks/useAuth/useAuth";
+import { Modal } from "../../components/Modal/Modal";
 
 interface Wedding {
   wedding_name: string;
@@ -11,7 +12,9 @@ interface Wedding {
 
 export const Events = () => {
   const { userId } = useContext(AuthContext);
+
   const [weddings, setWeddings] = useState<Wedding[]>([]);
+  const [isEventModalOpen, setIsEventModalOpen] = useState(false);
   /*
     TODO: Dynamic Dropdown Form Selection
     [
@@ -45,7 +48,28 @@ export const Events = () => {
   return (
     <div>
       <h1>Events</h1>
-      <WeddingForm />
+      <button
+        onClick={() => {
+          setIsEventModalOpen(true);
+        }}
+      >
+        Add Event
+      </button>
+      {isEventModalOpen ? (
+        <Modal
+          open={isEventModalOpen}
+          onClose={() => {
+            setIsEventModalOpen(false);
+          }}
+        >
+          <WeddingForm
+            onSubmit={() => {
+              setIsEventModalOpen(false);
+            }}
+          />
+        </Modal>
+      ) : null}
+
       {weddings.map((wedding, index) => (
         <Card
           key={index}

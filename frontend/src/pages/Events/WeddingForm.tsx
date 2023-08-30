@@ -15,7 +15,11 @@ interface WeddingForm {
   completed: boolean;
 }
 
-export const WeddingForm = () => {
+interface WeddingFormProps {
+  onSubmit: () => void
+}
+
+export const WeddingForm = (props: WeddingFormProps) => {
   const { userId } = useContext(AuthContext);
 
   const [weddingForm, setWeddingForm] = useState<WeddingForm>({
@@ -99,6 +103,8 @@ export const WeddingForm = () => {
           weddingPhotographer: "",
           completed: false,
         });
+
+        props.onSubmit()
       }
     } catch (error) {
       console.log("Wedding Form Error:", error);
