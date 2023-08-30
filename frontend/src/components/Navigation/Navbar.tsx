@@ -2,15 +2,26 @@ import { NavLink } from "react-router-dom";
 import { authedRoutes, mainRoutes } from "../../routes/routes";
 
 import "./Navbar.css";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../hooks/useAuth/useAuth";
 import { firebaseApp } from "../../hooks/useAuth/firebaseConfig";
+import { Modal } from "../Modal/Modal";
 
 export const Navbar = () => {
   const { isLoggedIn, ...authData } = useContext(AuthContext);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const onLogoutClick = () => {
     firebaseApp.auth().signOut();
+    closeModal();
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -40,7 +51,7 @@ export const Navbar = () => {
                 />
               )}
 
-              <a className="navbar__link" onClick={onLogoutClick}>
+              <a className="navbar__link" onClick={openModal}>
                 Logout
               </a>
             </span>
@@ -60,6 +71,9 @@ export const Navbar = () => {
             );
           })}
       </div>
+      <Modal open={isModalOpen} onClose={closeModal}>
+        <button onClick={onLogoutClick}>Confirm Logout?</button>
+      </Modal>
     </div>
   );
 };

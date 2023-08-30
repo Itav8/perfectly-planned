@@ -1,0 +1,29 @@
+.modal {
+  z-index: 9999;
+  position: absolute;
+  top: 100px;
+  border-radius: 10px;
+
+}
+
+.modal__content {
+  display: flex;
+  flex-direction: column;
+
+  width: 400px;
+  min-height: 200px;
+  padding: 10px;
+}
+
+.modal__close {
+  cursor: pointer;
+}
+
+.modal__footer {
+  align-self: flex-end;
+  position: absolute;
+  bottom: 10px;
+  height: 50px;
+}
+
+

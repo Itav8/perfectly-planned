@@ -1,0 +1,48 @@
+.guest__button {
+  margin: 15px;
+}
+
+.guest-form__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.guest-form {
+  width: 100%;
+}
+
+.guest-form>div {
+  margin-bottom: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+}
+
+.guest-form>div>label {
+  margin-right: 5px;
+}
+
+.guest-form>div>input {
+  padding: 5px;
+}
+
+.guest-form>.guest-form__checkbox {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.guest-form__checkbox>label {
+  width: 100%;
+}
+
+.guest-form__checkbox > input {
+  width: 20px;
+  height: 20px;
+}
+
+.guest-form__button {
+  margin-top: 20px;
+}
