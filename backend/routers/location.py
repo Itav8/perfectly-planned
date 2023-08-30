@@ -54,7 +54,7 @@ async def get_location(location_id: int, db: Session = Depends(get_db)):
         )
 
 
-@router.get("/location/list{account_uid}", response_model=list[LocationOut] | HttpError)
+@router.get("/location/list/{account_uid}", response_model=list[LocationOut] | HttpError)
 async def list_locations(account_uid: str, db: Session = Depends(get_db)):
     try:
         locations = db.query(LocationModel).filter(

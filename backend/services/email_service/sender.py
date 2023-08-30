@@ -6,7 +6,6 @@ queue = "email-task"
 
 # Publisher
 def publish_message(message: dict = {}):
-    print("BALHHHH")
     connection = pika.BlockingConnection(pika.ConnectionParameters("rabbitmq"))
     channel = connection.channel()
 
