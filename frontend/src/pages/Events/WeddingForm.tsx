@@ -1,46 +1,39 @@
 import { useState, useContext } from "react";
 import { AuthContext } from "../../hooks/useAuth/useAuth";
-
-interface WeddingForm {
-  weddingName: string;
-  weddingDate: string;
-  weddingTheme: string;
-  weddingBudget: number;
-  weddingGuest: number;
-  weddingVenue: string;
-  weddingDecorations: string;
-  weddingRegistry: string;
-  weddingPlanner: boolean;
-  weddingPhotographer: string;
-  completed: boolean;
-}
+import { Wedding } from "./Events";
 
 interface WeddingFormProps {
-  onSubmit: () => void
+  onSubmit: () => void;
+  type: "create" | "edit";
+  initialValues?: Wedding;
 }
 
 export const WeddingForm = (props: WeddingFormProps) => {
   const { userId } = useContext(AuthContext);
 
-  const [weddingForm, setWeddingForm] = useState<WeddingForm>({
-    weddingName: "",
-    weddingDate: "",
-    weddingTheme: "",
-    weddingBudget: 0,
-    weddingGuest: 0,
-    weddingVenue: "",
-    weddingDecorations: "",
-    weddingRegistry: "",
-    weddingPlanner: false,
-    weddingPhotographer: "",
-    completed: false,
-  });
+  const [weddingForm, setWeddingForm] = useState<Wedding>(
+    props.type === "edit" && props.initialValues
+      ? props.initialValues
+      : {
+          wedding_name: "",
+          wedding_date: "",
+          wedding_theme: "",
+          wedding_budget: 0,
+          wedding_guest: 0,
+          wedding_venue: "",
+          wedding_decorations: "",
+          wedding_registry: "",
+          wedding_planner: false,
+          wedding_photographer: "",
+          completed: false,
+        }
+  );
 
   const handleFormChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     // Keyof casts it to a type that corresponds to the keys of the 'WeddingForm' type. This is done to ensure type safety when accessing properties
     // of the 'WeddingForm' object later.
-    const inputName = event.target.name as keyof WeddingForm;
+    const inputName = event.target.name as keyof Wedding;
     const inputType = event.target.type;
 
     if (inputType === "checkbox") {
@@ -59,21 +52,19 @@ export const WeddingForm = (props: WeddingFormProps) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const weddingUrl = `${
-      import.meta.env.VITE_API_URL
-    }/wedding/create`;
+    const weddingUrl = `${import.meta.env.VITE_API_URL}/wedding/create`;
 
     const weddingData = {
-      wedding_name: weddingForm.weddingName,
-      wedding_date: weddingForm.weddingDate,
-      wedding_theme: weddingForm.weddingTheme,
-      wedding_budget: weddingForm.weddingBudget,
-      wedding_guest: weddingForm.weddingGuest,
-      wedding_venue: weddingForm.weddingVenue,
-      wedding_decorations: weddingForm.weddingDecorations,
-      wedding_registry: weddingForm.weddingRegistry,
-      wedding_planner: weddingForm.weddingPlanner,
-      wedding_photographer: weddingForm.weddingPhotographer,
+      wedding_name: weddingForm.wedding_name,
+      wedding_date: weddingForm.wedding_date,
+      wedding_theme: weddingForm.wedding_theme,
+      wedding_budget: weddingForm.wedding_budget,
+      wedding_guest: weddingForm.wedding_guest,
+      wedding_venue: weddingForm.wedding_venue,
+      wedding_decorations: weddingForm.wedding_decorations,
+      wedding_registry: weddingForm.wedding_registry,
+      wedding_planner: weddingForm.wedding_planner,
+      wedding_photographer: weddingForm.wedding_photographer,
       completed: weddingForm.completed,
       account_uid: userId,
     };
@@ -91,128 +82,194 @@ export const WeddingForm = (props: WeddingFormProps) => {
 
       if (weddingResponse.ok) {
         setWeddingForm({
-          weddingName: "",
-          weddingDate: "",
-          weddingTheme: "",
-          weddingBudget: 0,
-          weddingGuest: 0,
-          weddingVenue: "",
-          weddingDecorations: "",
-          weddingRegistry: "",
-          weddingPlanner: false,
-          weddingPhotographer: "",
+          wedding_name: "",
+          wedding_date: "",
+          wedding_theme: "",
+          wedding_budget: 0,
+          wedding_guest: 0,
+          wedding_venue: "",
+          wedding_decorations: "",
+          wedding_registry: "",
+          wedding_planner: false,
+          wedding_photographer: "",
           completed: false,
         });
 
-        props.onSubmit()
+        props.onSubmit();
       }
     } catch (error) {
       console.log("Wedding Form Error:", error);
     }
   };
 
+  const handleEditSubmit = async (
+    event: React.FormEvent<HTMLFormElement>,
+    weddingId: number | undefined
+  ) => {
+    event.preventDefault();
+
+    const editWeddingUrl = `${
+      import.meta.env.VITE_API_URL
+    }/wedding/edit/${weddingId}`;
+
+    const editedWeddingData = {
+      wedding_name: weddingForm.wedding_name,
+      wedding_date: weddingForm.wedding_date,
+      wedding_theme: weddingForm.wedding_theme,
+      wedding_budget: weddingForm.wedding_budget,
+      wedding_guest: weddingForm.wedding_guest,
+      wedding_venue: weddingForm.wedding_venue,
+      wedding_decorations: weddingForm.wedding_decorations,
+      wedding_registry: weddingForm.wedding_registry,
+      wedding_planner: weddingForm.wedding_planner,
+      wedding_photographer: weddingForm.wedding_photographer,
+      completed: weddingForm.completed,
+      account_uid: userId,
+    };
+
+    const fetchConfig = {
+      method: "put",
+      body: JSON.stringify(editedWeddingData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      const editedResponse = await fetch(editWeddingUrl, fetchConfig);
+
+      if (editedResponse.ok) {
+        setWeddingForm({
+          wedding_name: "",
+          wedding_date: "",
+          wedding_theme: "",
+          wedding_budget: 0,
+          wedding_guest: 0,
+          wedding_venue: "",
+          wedding_decorations: "",
+          wedding_registry: "",
+          wedding_planner: false,
+          wedding_photographer: "",
+          completed: false,
+        });
+
+        props.onSubmit();
+      }
+    } catch (error) {
+      console.log("Error editing wedding:", error);
+    }
+  };
+
   return (
     <div>
-      <h1>Wedding Form</h1>
+      <h1>{props.type === "create" ? "Create Wedding" : "Edit Wedding"}</h1>
       <div>
-        <form onSubmit={handleSubmit}>
+        <form
+          onSubmit={(event) => {
+            if (props.type === "create") {
+              handleSubmit(event);
+            } else {
+              handleEditSubmit(event, weddingForm.wedding_id);
+            }
+          }}
+        >
           <div>
-            <label htmlFor="weddingName"> Wedding Name:</label>
+            <label htmlFor="wedding_name"> Wedding Name:</label>
             <input
               type="text"
-              id="weddingName"
-              name="weddingName"
-              value={weddingForm.weddingName}
+              id="wedding_name"
+              name="wedding_name"
+              value={weddingForm.wedding_name}
               onChange={handleFormChange}
             />
           </div>
           <div>
-            <label htmlFor="weddingDate">Wedding Date:</label>
+            <label htmlFor="wedding_date">Wedding Date:</label>
             <input
               type="datetime-local"
-              id="weddingDate"
-              name="weddingDate"
-              value={weddingForm.weddingDate}
+              id="wedding_date"
+              name="wedding_date"
+              value={weddingForm.wedding_date}
               onChange={handleFormChange}
             />
           </div>
           <div>
-            <label htmlFor="weddingTheme">Wedding Theme:</label>
+            <label htmlFor="wedding_theme">Wedding Theme:</label>
             <input
               type="text"
-              id="weddingTheme"
-              name="weddingTheme"
-              value={weddingForm.weddingTheme}
+              id="wedding_theme"
+              name="wedding_theme"
+              value={weddingForm.wedding_theme}
               onChange={handleFormChange}
             />
           </div>
           <div>
-            <label htmlFor="weddingBudget">Wedding Budget:</label>
+            <label htmlFor="wedding_budget">Wedding Budget:</label>
             <input
               type="number"
-              id="weddingBudget"
-              name="weddingBudget"
-              value={weddingForm.weddingBudget}
+              id="wedding_budget"
+              name="wedding_budget"
+              value={weddingForm.wedding_budget}
               onChange={handleFormChange}
             />
           </div>
           <div>
-            <label htmlFor="weddingGuest">Wedding Guests:</label>
+            <label htmlFor="wedding_guest">Wedding Guests:</label>
             <input
               type="number"
-              id="weddingGuest"
-              name="weddingGuest"
-              value={weddingForm.weddingGuest}
+              id="wedding_guest"
+              name="wedding_guest"
+              value={weddingForm.wedding_guest}
               onChange={handleFormChange}
             />
           </div>
           <div>
-            <label htmlFor="weddingVenue">Wedding Venue:</label>
+            <label htmlFor="wedding_venue">Wedding Venue:</label>
             <input
               type="text"
-              id="weddingVenue"
-              name="weddingVenue"
-              value={weddingForm.weddingVenue}
+              id="wedding_venue"
+              name="wedding_venue"
+              value={weddingForm.wedding_venue}
               onChange={handleFormChange}
             />
           </div>
           <div>
-            <label htmlFor="weddingDecorations">Wedding Decorations:</label>
+            <label htmlFor="wedding_decorations">Wedding Decorations:</label>
             <input
               type="text"
-              id="weddingDecorations"
-              name="weddingDecorations"
-              value={weddingForm.weddingDecorations}
+              id="wedding_decorations"
+              name="wedding_decorations"
+              value={weddingForm.wedding_decorations}
               onChange={handleFormChange}
             />
           </div>
           <div>
-            <label htmlFor="weddingRegistry">Wedding Registry:</label>
+            <label htmlFor="wedding_registry">Wedding Registry:</label>
             <input
               type="text"
-              id="weddingRegistry"
-              name="weddingRegistry"
-              value={weddingForm.weddingRegistry}
+              id="wedding_registry"
+              name="wedding_registry"
+              value={weddingForm.wedding_registry}
               onChange={handleFormChange}
             />
           </div>
           <div>
-            <label htmlFor="weddingPlanner">Wedding Planner:</label>
+            <label htmlFor="wedding_planner">Wedding Planner:</label>
             <input
               type="checkbox"
-              id="weddingPlanner"
-              name="weddingPlanner"
-              checked={weddingForm.weddingPlanner}
+              id="wedding_planner"
+              name="wedding_planner"
+              checked={weddingForm.wedding_planner}
               onChange={handleFormChange}
             />
           </div>
           <div>
-            <label htmlFor="weddingPhotographer">Wedding Photographer:</label>
+            <label htmlFor="wedding_photographer">Wedding Photographer:</label>
             <input
               type="text"
-              id="weddingPhotographer"
-              name="weddingPhotographer"
-              value={weddingForm.weddingPhotographer}
+              id="wedding_photographer"
+              name="wedding_photographer"
+              value={weddingForm.wedding_photographer}
               onChange={handleFormChange}
             />
           </div>
