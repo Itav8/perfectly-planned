@@ -1,11 +1,12 @@
 .card {
-  background-color: grey;
-  border: solid black 5px;
+  background-color: rgb(176, 154, 249);
+  border: solid black 2px;
   width: 250px;
   height: 300px;
   margin-top: 15px;
   padding: 10px;
   border-radius: 10px;
+  cursor: pointer;
 }
 
 .card__content {
@@ -20,8 +21,8 @@
   overflow: hidden;
 }
 
-.card__date {
+/* .card__date {
   align-self: flex-end;
   position: relative;
   top: 60px;
-}
+} */

@@ -1,0 +1,9 @@
+.event__card {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.event__card>.card {
+  margin-right: 10px;
+}
