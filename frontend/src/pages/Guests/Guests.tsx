@@ -20,7 +20,7 @@ export interface Guest {
   status: "pending" | "attending" | "declined";
   bride_guest: boolean;
   groom_guest: boolean;
-  bridesmaid_guest: boolean;
+  bridesmaids_guest: boolean;
   groomsmen_guest: boolean;
   event_type: string;
 }
@@ -55,6 +55,7 @@ export const Guests = () => {
             onClick={() => {
               setIsEditModalOpen(true);
               setSelectedGuest({
+                guest_id: params.row.guest_id,
                 first_name: params.row.first_name,
                 last_name: params.row.last_name,
                 address_1: params.row.address_1,
@@ -67,7 +68,7 @@ export const Guests = () => {
                 status: params.row.status,
                 bride_guest: params.row.bride_guest,
                 groom_guest: params.row.groom_guest,
-                bridesmaid_guest: params.row.bridesmaid_guest,
+                bridesmaids_guest: params.row.bridesmaids_guest,
                 groomsmen_guest: params.row.groomsmen_guest,
                 event_type: params.row.event_type,
               });
@@ -90,12 +91,11 @@ export const Guests = () => {
     { field: "status", headerName: "Status", width: 130 },
     { field: "bride_guest", headerName: "Bride Guest", width: 150 },
     { field: "groom_guest", headerName: "Groom Guest", width: 150 },
-    { field: "bridesmaid_guest", headerName: "Bridesmaid Guest", width: 180 },
+    { field: "bridesmaids_guest", headerName: "Bridesmaid Guest", width: 180 },
     { field: "groomsmen_guest", headerName: "Groomsmen Guest", width: 180 },
     { field: "event_type", headerName: "Event Type", width: 150 },
   ];
 
-  console.log("SELECTED", selectedGuest);
   const fetchGuests = async () => {
     const guestlistUrl = `${import.meta.env.VITE_API_URL}/guest/list/${userId}`;
 
@@ -118,6 +118,7 @@ export const Guests = () => {
 
   useEffect(() => {
     fetchGuests();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   const openModal = () => {
@@ -135,9 +136,9 @@ export const Guests = () => {
     event.preventDefault();
 
     const inviteGuest = `${import.meta.env.VITE_API_URL}/guest/invite`;
-    console.log("EMAIL", email);
     const messageData = {
       email: email,
+      // TODO: Make this dynamic
       subject: "You're Invited!!",
       message: "Welcome",
     };
@@ -154,10 +155,10 @@ export const Guests = () => {
       const inviteResponse = await fetch(inviteGuest, fetchConfig);
 
       if (inviteResponse.ok) {
-        console.log("GOOD");
+        console.log("Success");
       }
     } catch (error) {
-      console.log("BAD SHIT", error);
+      console.log("Error inviting guest", error);
     }
   };
 
@@ -182,13 +183,19 @@ export const Guests = () => {
             setIsEditModalOpen(false);
           }}
         >
-          <GuestForm type="edit" values={selectedGuest} onSubmit={() => {}} />
+          <GuestForm
+            type="edit"
+            initialValues={selectedGuest}
+            onSubmit={() => {
+              fetchGuests();
+            }}
+          />
         </Modal>
       ) : null}
       <button className="guest__button" onClick={openModal}>
         Add Guest
       </button>
-      <div className="guest__table" style={{ height: 300, width: "100%" }}>
+      <div className="guest__table" style={{ height: 500, width: "100%" }}>
         <DataGrid
           rows={guests}
           columns={columns}

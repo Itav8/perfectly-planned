@@ -4,7 +4,7 @@ import "./Guest.css";
 import { Guest } from "./Guests";
 
 interface GuestFormProps {
-  values?: Guest;
+  initialValues?: Guest;
   onSubmit: () => void;
   type: "edit" | "create";
 }
@@ -13,8 +13,8 @@ export const GuestForm = (props: GuestFormProps) => {
   const { userId } = useContext(AuthContext);
 
   const [guestForm, setGuestForm] = useState<Guest>(
-    props.type === "edit" && props.values
-      ? props.values
+    props.type === "edit" && props.initialValues
+      ? props.initialValues
       : {
           first_name: "",
           last_name: "",
@@ -28,7 +28,7 @@ export const GuestForm = (props: GuestFormProps) => {
           status: "pending",
           bride_guest: false,
           groom_guest: false,
-          bridesmaid_guest: false,
+          bridesmaids_guest: false,
           groomsmen_guest: false,
           event_type: "",
         }
@@ -77,7 +77,7 @@ export const GuestForm = (props: GuestFormProps) => {
       status,
       bride_guest,
       groom_guest,
-      bridesmaid_guest,
+      bridesmaids_guest,
       groomsmen_guest,
       event_type,
     } = guestForm;
@@ -95,7 +95,7 @@ export const GuestForm = (props: GuestFormProps) => {
       status,
       bride_guest,
       groom_guest,
-      bridesmaid_guest,
+      bridesmaids_guest,
       groomsmen_guest,
       event_type,
       account_uid: userId,
@@ -126,7 +126,7 @@ export const GuestForm = (props: GuestFormProps) => {
           status: "pending",
           bride_guest: false,
           groom_guest: false,
-          bridesmaid_guest: false,
+          bridesmaids_guest: false,
           groomsmen_guest: false,
           event_type: "",
         });
@@ -138,8 +138,70 @@ export const GuestForm = (props: GuestFormProps) => {
     }
   };
 
-  const handleEditSubmit = () => {
-    console.log("HERE");
+  const handleEditSubmit = async (
+    event: React.FormEvent<HTMLFormElement>,
+    guestId: number | undefined
+  ) => {
+    event.preventDefault();
+
+    const editGuestUrl = `${
+      import.meta.env.VITE_API_URL
+    }/guest/edit/${guestId}`;
+
+    const editedGuestData = {
+      first_name: guestForm.first_name,
+      last_name: guestForm.last_name,
+      address_1: guestForm.address_1,
+      address_2: guestForm.address_2,
+      city: guestForm.city,
+      state: guestForm.state,
+      zipcode: guestForm.zipcode,
+      phone_number: guestForm.phone_number,
+      email: guestForm.email,
+      status: guestForm.status,
+      bride_guest: guestForm.bride_guest,
+      groom_guest: guestForm.groom_guest,
+      bridesmaids_guest: guestForm.bridesmaids_guest,
+      groomsmen_guest: guestForm.groomsmen_guest,
+      event_type: guestForm.event_type,
+      account_uid: userId,
+    };
+
+    const fetchConfig = {
+      method: "put",
+      body: JSON.stringify(editedGuestData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      const editedResponse = await fetch(editGuestUrl, fetchConfig);
+
+      if (editedResponse.ok) {
+        setGuestForm({
+          first_name: "",
+          last_name: "",
+          address_1: "",
+          address_2: "",
+          city: "",
+          state: "",
+          zipcode: "",
+          phone_number: "",
+          email: "",
+          status: "pending",
+          bride_guest: false,
+          groom_guest: false,
+          bridesmaids_guest: false,
+          groomsmen_guest: false,
+          event_type: "",
+        });
+
+        props.onSubmit();
+      }
+    } catch (error) {
+      console.log("Error editing guest:", error);
+    }
   };
 
   return (
@@ -152,12 +214,12 @@ export const GuestForm = (props: GuestFormProps) => {
           if (props.type === "create") {
             handleSubmit(event);
           } else {
-            handleEditSubmit();
+            handleEditSubmit(event, guestForm.guest_id);
           }
         }}
       >
         <div>
-          <label htmlFor="first_name"> First Name:</label>
+          <label htmlFor="first_name">First Name:</label>
           <input
             type="text"
             id="first_name"
@@ -282,12 +344,12 @@ export const GuestForm = (props: GuestFormProps) => {
           />
         </div>
         <div className="guest-form__checkbox">
-          <label htmlFor="bridesmaid_guest">Bridesmaid:</label>
+          <label htmlFor="bridesmaids_guest">Bridesmaid:</label>
           <input
             type="checkbox"
-            id="bridesmaid_guest"
-            name="bridesmaid_guest"
-            checked={guestForm.bridesmaid_guest}
+            id="bridesmaids_guest"
+            name="bridesmaids_guest"
+            checked={guestForm.bridesmaids_guest}
             onChange={handleFormChange}
           />
         </div>
