@@ -1,27 +1,10 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import { AuthContext } from "../../hooks/useAuth/useAuth";
 import "./Guest.css";
-
-interface GuestForm {
-  firstName: string;
-  lastName: string;
-  address1: string;
-  address2: string;
-  city: string;
-  state: string;
-  zipcode: string;
-  phoneNumber: string;
-  email: string;
-  status: "pending" | "attending" | "declined";
-  brideGuest: boolean;
-  groomGuest: boolean;
-  bridesmaidGuest: boolean;
-  groomsmenGuest: boolean;
-  eventType: string;
-}
+import { Guest } from "./Guests";
 
 interface GuestFormProps {
-  values?: GuestForm;
+  values?: Guest;
   onSubmit: () => void;
   type: "edit" | "create";
 }
@@ -29,23 +12,27 @@ interface GuestFormProps {
 export const GuestForm = (props: GuestFormProps) => {
   const { userId } = useContext(AuthContext);
 
-  const [guestForm, setGuestForm] = useState<GuestForm>({
-    firstName: "",
-    lastName: "",
-    address1: "",
-    address2: "",
-    city: "",
-    state: "",
-    zipcode: "",
-    phoneNumber: "",
-    email: "",
-    status: "pending",
-    brideGuest: false,
-    groomGuest: false,
-    bridesmaidGuest: false,
-    groomsmenGuest: false,
-    eventType: "",
-  });
+  const [guestForm, setGuestForm] = useState<Guest>(
+    props.type === "edit" && props.values
+      ? props.values
+      : {
+          first_name: "",
+          last_name: "",
+          address_1: "",
+          address_2: "",
+          city: "",
+          state: "",
+          zipcode: "",
+          phone_number: "",
+          email: "",
+          status: "pending",
+          bride_guest: false,
+          groom_guest: false,
+          bridesmaid_guest: false,
+          groomsmen_guest: false,
+          event_type: "",
+        }
+  );
 
   const selectOptions = [
     { label: "Pending", value: "pending" },
@@ -53,17 +40,11 @@ export const GuestForm = (props: GuestFormProps) => {
     { label: "Declined", value: "declined" },
   ];
 
-  useEffect(() => {
-    if (props.type === "edit" && props.values) {
-      setGuestForm(props.values);
-    }
-  }, [props.values, props.type]);
-
   const handleFormChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const value = event?.target.value;
-    const inputName = event.target.name as keyof GuestForm;
+    const inputName = event.target.name as keyof Guest;
     const inputType = event.target.type;
 
     if (inputType === "checkbox") {
@@ -83,23 +64,40 @@ export const GuestForm = (props: GuestFormProps) => {
     event.preventDefault();
 
     const guestUrl = `${import.meta.env.VITE_API_URL}/guest/create`;
+    const {
+      first_name,
+      last_name,
+      address_1,
+      address_2,
+      city,
+      state,
+      zipcode,
+      phone_number,
+      email,
+      status,
+      bride_guest,
+      groom_guest,
+      bridesmaid_guest,
+      groomsmen_guest,
+      event_type,
+    } = guestForm;
 
     const guestData = {
-      first_name: guestForm.firstName,
-      last_name: guestForm.lastName,
-      address_1: guestForm.address1,
-      address_2: guestForm.address2,
-      city: guestForm.city,
-      state: guestForm.state,
-      zipcode: guestForm.zipcode,
-      phone_number: guestForm.phoneNumber,
-      email: guestForm.email,
-      status: guestForm.status,
-      bride_guest: guestForm.brideGuest,
-      groom_guest: guestForm.groomGuest,
-      bridesmaids_guest: guestForm.bridesmaidGuest,
-      groomsmen_guest: guestForm.groomsmenGuest,
-      event_type: guestForm.eventType,
+      first_name,
+      last_name,
+      address_1,
+      address_2,
+      city,
+      state,
+      zipcode,
+      phone_number,
+      email,
+      status,
+      bride_guest,
+      groom_guest,
+      bridesmaid_guest,
+      groomsmen_guest,
+      event_type,
       account_uid: userId,
     };
 
@@ -116,21 +114,21 @@ export const GuestForm = (props: GuestFormProps) => {
 
       if (guestResponse.ok) {
         setGuestForm({
-          firstName: "",
-          lastName: "",
-          address1: "",
-          address2: "",
+          first_name: "",
+          last_name: "",
+          address_1: "",
+          address_2: "",
           city: "",
           state: "",
           zipcode: "",
-          phoneNumber: "",
+          phone_number: "",
           email: "",
           status: "pending",
-          brideGuest: false,
-          groomGuest: false,
-          bridesmaidGuest: false,
-          groomsmenGuest: false,
-          eventType: "",
+          bride_guest: false,
+          groom_guest: false,
+          bridesmaid_guest: false,
+          groomsmen_guest: false,
+          event_type: "",
         });
 
         props.onSubmit();
@@ -143,7 +141,7 @@ export const GuestForm = (props: GuestFormProps) => {
   const handleEditSubmit = () => {
     console.log("HERE");
   };
-  console.log("GUEST FORM PROPS", props);
+
   return (
     <div className="guest-form__container">
       <h1>Guest Form</h1>
@@ -159,42 +157,42 @@ export const GuestForm = (props: GuestFormProps) => {
         }}
       >
         <div>
-          <label htmlFor="firstName"> First Name:</label>
+          <label htmlFor="first_name"> First Name:</label>
           <input
             type="text"
-            id="firstName"
-            name="firstName"
-            value={guestForm.firstName || ""}
+            id="first_name"
+            name="first_name"
+            value={guestForm.first_name}
             onChange={handleFormChange}
           />
         </div>
         <div>
-          <label htmlFor="lastName">Last Name:</label>
+          <label htmlFor="last_name">Last Name:</label>
           <input
             type="text"
-            id="lastName"
-            name="lastName"
-            value={guestForm.lastName || ""}
+            id="last_name"
+            name="last_name"
+            value={guestForm.last_name}
             onChange={handleFormChange}
           />
         </div>
         <div>
-          <label htmlFor="address1">Address 1:</label>
+          <label htmlFor="address_1">Address 1:</label>
           <input
             type="text"
-            id="address1"
-            name="address1"
-            value={guestForm.address1 || ""}
+            id="address_1"
+            name="address_1"
+            value={guestForm.address_1}
             onChange={handleFormChange}
           />
         </div>
         <div>
-          <label htmlFor="address2">Address 2:</label>
+          <label htmlFor="address_2">Address 2:</label>
           <input
             type="text"
-            id="address2"
-            name="address2"
-            value={guestForm.address2 || ""}
+            id="address_2"
+            name="address_2"
+            value={guestForm.address_2}
             onChange={handleFormChange}
           />
         </div>
@@ -204,7 +202,7 @@ export const GuestForm = (props: GuestFormProps) => {
             type="text"
             id="city"
             name="city"
-            value={guestForm.city || ""}
+            value={guestForm.city}
             onChange={handleFormChange}
           />
         </div>
@@ -214,7 +212,7 @@ export const GuestForm = (props: GuestFormProps) => {
             type="text"
             id="state"
             name="state"
-            value={guestForm.state || ""}
+            value={guestForm.state}
             onChange={handleFormChange}
           />
         </div>
@@ -224,17 +222,17 @@ export const GuestForm = (props: GuestFormProps) => {
             type="text"
             id="zipcode"
             name="zipcode"
-            value={guestForm.zipcode || ""}
+            value={guestForm.zipcode}
             onChange={handleFormChange}
           />
         </div>
         <div>
-          <label htmlFor="phoneNumber">Phone Number:</label>
+          <label htmlFor="phone_number">Phone Number:</label>
           <input
             type="text"
-            id="phoneNumber"
-            name="phoneNumber"
-            value={guestForm.phoneNumber || ""}
+            id="phone_number"
+            name="phone_number"
+            value={guestForm.phone_number}
             onChange={handleFormChange}
           />
         </div>
@@ -244,7 +242,7 @@ export const GuestForm = (props: GuestFormProps) => {
             type="email"
             id="email"
             name="email"
-            value={guestForm.email || ""}
+            value={guestForm.email}
             onChange={handleFormChange}
           />
         </div>
@@ -264,52 +262,52 @@ export const GuestForm = (props: GuestFormProps) => {
           </select>
         </div>
         <div className="guest-form__checkbox">
-          <label htmlFor="brideGuest">Bride's Guest:</label>
+          <label htmlFor="bride_guest">Bride's Guest:</label>
           <input
             type="checkbox"
-            id="brideGuest"
-            name="brideGuest"
-            checked={guestForm.brideGuest || false}
+            id="bride_guest"
+            name="bride_guest"
+            checked={guestForm.bride_guest}
             onChange={handleFormChange}
           />
         </div>
         <div className="guest-form__checkbox">
-          <label htmlFor="groomGuest">Groom's Guest:</label>
+          <label htmlFor="groom_guest">Groom's Guest:</label>
           <input
             type="checkbox"
-            id="groomGuest"
-            name="groomGuest"
-            checked={guestForm.groomGuest || false}
+            id="groom_guest"
+            name="groom_guest"
+            checked={guestForm.groom_guest}
             onChange={handleFormChange}
           />
         </div>
         <div className="guest-form__checkbox">
-          <label htmlFor="bridesmaidGuest">Bridesmaid:</label>
+          <label htmlFor="bridesmaid_guest">Bridesmaid:</label>
           <input
             type="checkbox"
-            id="bridesmaidGuest"
-            name="bridesmaidGuest"
-            checked={guestForm.bridesmaidGuest || false}
+            id="bridesmaid_guest"
+            name="bridesmaid_guest"
+            checked={guestForm.bridesmaid_guest}
             onChange={handleFormChange}
           />
         </div>
         <div className="guest-form__checkbox">
-          <label htmlFor="groomsmenGuest">Groomsmen:</label>
+          <label htmlFor="groomsmen_guest">Groomsmen:</label>
           <input
             type="checkbox"
-            id="groomsmenGuest"
-            name="groomsmenGuest"
-            checked={guestForm.groomsmenGuest || false}
+            id="groomsmen_guest"
+            name="groomsmen_guest"
+            checked={guestForm.groomsmen_guest}
             onChange={handleFormChange}
           />
         </div>
         <div>
-          <label htmlFor="eventType">Event:</label>
+          <label htmlFor="event_type">Event:</label>
           <input
             type="text"
-            id="eventType"
-            name="eventType"
-            value={guestForm.eventType || ""}
+            id="event_type"
+            name="event_type"
+            value={guestForm.event_type}
             onChange={handleFormChange}
           />
         </div>

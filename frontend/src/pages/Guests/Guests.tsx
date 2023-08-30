@@ -6,12 +6,12 @@ import { AuthContext } from "../../hooks/useAuth/useAuth";
 import { Modal } from "../../components/Modal/Modal";
 
 import "./Guest.css";
-interface Guest {
-  guest_id: number;
+export interface Guest {
+  guest_id?: number;
   first_name: string;
   last_name: string;
-  address1: string;
-  address2: string;
+  address_1: string;
+  address_2: string;
   city: string;
   state: string;
   zipcode: string;
@@ -25,45 +25,11 @@ interface Guest {
   event_type: string;
 }
 
-interface SelectedGuest {
-  firstName: string;
-  lastName: string;
-  address1: string;
-  address2: string;
-  city: string;
-  state: string;
-  zipcode: string;
-  phoneNumber: string;
-  email: string;
-  status: "pending" | "attending" | "declined";
-  brideGuest: boolean;
-  groomGuest: boolean;
-  bridesmaidGuest: boolean;
-  groomsmenGuest: boolean;
-  eventType: string;
-}
-
 export const Guests = () => {
   const { userId } = useContext(AuthContext);
 
   const [guests, setGuests] = useState<Guest[]>([]);
-  const [selectedGuest, setSelectedGuest] = useState<SelectedGuest>({
-    firstName: "",
-    lastName: "",
-    address1: "",
-    address2: "",
-    city: "",
-    state: "",
-    zipcode: "",
-    phoneNumber: "",
-    email: "",
-    status: "pending",
-    brideGuest: false,
-    groomGuest: false,
-    bridesmaidGuest: false,
-    groomsmenGuest: false,
-    eventType: "",
-  });
+  const [selectedGuest, setSelectedGuest] = useState<Guest>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const columns: GridColDef[] = [
@@ -89,21 +55,21 @@ export const Guests = () => {
             onClick={() => {
               setIsEditModalOpen(true);
               setSelectedGuest({
-                firstName: params.row.first_name,
-                lastName: params.row.last_name,
-                address1: params.row.address_1,
-                address2: params.row.address_2,
+                first_name: params.row.first_name,
+                last_name: params.row.last_name,
+                address_1: params.row.address_1,
+                address_2: params.row.address_2,
                 city: params.row.city,
                 state: params.row.state,
                 zipcode: params.row.zipcode,
-                phoneNumber: params.row.phone_number,
+                phone_number: params.row.phone_number,
                 email: params.row.email,
                 status: params.row.status,
-                brideGuest: params.row.bride_guest,
-                groomGuest: params.row.groom_guest,
-                bridesmaidGuest: params.row.bridesmaid_guest,
-                groomsmenGuest: params.row.groomsmen_guest,
-                eventType: params.row.event_type,
+                bride_guest: params.row.bride_guest,
+                groom_guest: params.row.groom_guest,
+                bridesmaid_guest: params.row.bridesmaid_guest,
+                groomsmen_guest: params.row.groomsmen_guest,
+                event_type: params.row.event_type,
               });
             }}
           >
@@ -129,7 +95,7 @@ export const Guests = () => {
     { field: "event_type", headerName: "Event Type", width: 150 },
   ];
 
-  console.log("SELECTED", selectedGuest)
+  console.log("SELECTED", selectedGuest);
   const fetchGuests = async () => {
     const guestlistUrl = `${import.meta.env.VITE_API_URL}/guest/list/${userId}`;
 
@@ -198,23 +164,27 @@ export const Guests = () => {
   return (
     <div>
       <h1>Guests</h1>
-      <Modal open={isModalOpen} onClose={closeModal}>
-        <GuestForm
-          type="create"
-          onSubmit={() => {
-            fetchGuests();
-            closeModal();
+      {isModalOpen ? (
+        <Modal open={isModalOpen} onClose={closeModal}>
+          <GuestForm
+            type="create"
+            onSubmit={() => {
+              fetchGuests();
+              closeModal();
+            }}
+          />
+        </Modal>
+      ) : null}
+      {selectedGuest ? (
+        <Modal
+          open={isEditModalOpen}
+          onClose={() => {
+            setIsEditModalOpen(false);
           }}
-        />
-      </Modal>
-      <Modal
-        open={isEditModalOpen}
-        onClose={() => {
-          setIsEditModalOpen(false);
-        }}
-      >
-        <GuestForm type="edit" values={selectedGuest} onSubmit={() => {}} />
-      </Modal>
+        >
+          <GuestForm type="edit" values={selectedGuest} onSubmit={() => {}} />
+        </Modal>
+      ) : null}
       <button className="guest__button" onClick={openModal}>
         Add Guest
       </button>
