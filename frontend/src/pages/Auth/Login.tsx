@@ -15,7 +15,9 @@ export const Login = () => {
       // check if firebaseui instance already exists
       let ui = firebaseui.auth.AuthUI.getInstance();
       // if not, create a new one
-      if (!ui) ui = new firebaseui.auth.AuthUI(firebaseApp.auth());
+      if (!ui) {
+         ui = new firebaseui.auth.AuthUI(firebaseApp.auth());
+      }
 
       const uiConfig: firebaseui.auth.Config = {
         callbacks: {

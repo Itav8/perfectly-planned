@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../../hooks/useAuth/useAuth";
 import "./Guest.css";
 
@@ -20,7 +20,13 @@ interface GuestForm {
   eventType: string;
 }
 
-export const GuestForm = (props: { onSubmit: () => void }) => {
+interface GuestFormProps {
+  values?: GuestForm;
+  onSubmit: () => void;
+  type: "edit" | "create";
+}
+
+export const GuestForm = (props: GuestFormProps) => {
   const { userId } = useContext(AuthContext);
 
   const [guestForm, setGuestForm] = useState<GuestForm>({
@@ -46,6 +52,12 @@ export const GuestForm = (props: { onSubmit: () => void }) => {
     { label: "Attending", value: "attending" },
     { label: "Declined", value: "declined" },
   ];
+
+  useEffect(() => {
+    if (props.type === "edit" && props.values) {
+      setGuestForm(props.values);
+    }
+  }, [props.values, props.type]);
 
   const handleFormChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -128,18 +140,31 @@ export const GuestForm = (props: { onSubmit: () => void }) => {
     }
   };
 
+  const handleEditSubmit = () => {
+    console.log("HERE");
+  };
+  console.log("GUEST FORM PROPS", props);
   return (
     <div className="guest-form__container">
       <h1>Guest Form</h1>
 
-      <form className="guest-form" onSubmit={handleSubmit}>
+      <form
+        className="guest-form"
+        onSubmit={(event) => {
+          if (props.type === "create") {
+            handleSubmit(event);
+          } else {
+            handleEditSubmit();
+          }
+        }}
+      >
         <div>
           <label htmlFor="firstName"> First Name:</label>
           <input
             type="text"
             id="firstName"
             name="firstName"
-            value={guestForm.firstName}
+            value={guestForm.firstName || ""}
             onChange={handleFormChange}
           />
         </div>
@@ -149,7 +174,7 @@ export const GuestForm = (props: { onSubmit: () => void }) => {
             type="text"
             id="lastName"
             name="lastName"
-            value={guestForm.lastName}
+            value={guestForm.lastName || ""}
             onChange={handleFormChange}
           />
         </div>
@@ -159,17 +184,17 @@ export const GuestForm = (props: { onSubmit: () => void }) => {
             type="text"
             id="address1"
             name="address1"
-            value={guestForm.address1}
+            value={guestForm.address1 || ""}
             onChange={handleFormChange}
           />
         </div>
         <div>
-          <label htmlFor="address2">Adress 2:</label>
+          <label htmlFor="address2">Address 2:</label>
           <input
             type="text"
             id="address2"
             name="address2"
-            value={guestForm.address2}
+            value={guestForm.address2 || ""}
             onChange={handleFormChange}
           />
         </div>
@@ -179,7 +204,7 @@ export const GuestForm = (props: { onSubmit: () => void }) => {
             type="text"
             id="city"
             name="city"
-            value={guestForm.city}
+            value={guestForm.city || ""}
             onChange={handleFormChange}
           />
         </div>
@@ -189,7 +214,7 @@ export const GuestForm = (props: { onSubmit: () => void }) => {
             type="text"
             id="state"
             name="state"
-            value={guestForm.state}
+            value={guestForm.state || ""}
             onChange={handleFormChange}
           />
         </div>
@@ -199,7 +224,7 @@ export const GuestForm = (props: { onSubmit: () => void }) => {
             type="text"
             id="zipcode"
             name="zipcode"
-            value={guestForm.zipcode}
+            value={guestForm.zipcode || ""}
             onChange={handleFormChange}
           />
         </div>
@@ -209,7 +234,7 @@ export const GuestForm = (props: { onSubmit: () => void }) => {
             type="text"
             id="phoneNumber"
             name="phoneNumber"
-            value={guestForm.phoneNumber}
+            value={guestForm.phoneNumber || ""}
             onChange={handleFormChange}
           />
         </div>
@@ -219,7 +244,7 @@ export const GuestForm = (props: { onSubmit: () => void }) => {
             type="email"
             id="email"
             name="email"
-            value={guestForm.email}
+            value={guestForm.email || ""}
             onChange={handleFormChange}
           />
         </div>
@@ -228,7 +253,7 @@ export const GuestForm = (props: { onSubmit: () => void }) => {
           <select
             id="status"
             name="status"
-            value={guestForm.status}
+            value={guestForm.status || "pending"}
             onChange={handleFormChange}
           >
             {selectOptions.map((statusOption, index) => (
@@ -244,7 +269,7 @@ export const GuestForm = (props: { onSubmit: () => void }) => {
             type="checkbox"
             id="brideGuest"
             name="brideGuest"
-            checked={guestForm.brideGuest}
+            checked={guestForm.brideGuest || false}
             onChange={handleFormChange}
           />
         </div>
@@ -254,7 +279,7 @@ export const GuestForm = (props: { onSubmit: () => void }) => {
             type="checkbox"
             id="groomGuest"
             name="groomGuest"
-            checked={guestForm.groomGuest}
+            checked={guestForm.groomGuest || false}
             onChange={handleFormChange}
           />
         </div>
@@ -264,7 +289,7 @@ export const GuestForm = (props: { onSubmit: () => void }) => {
             type="checkbox"
             id="bridesmaidGuest"
             name="bridesmaidGuest"
-            checked={guestForm.bridesmaidGuest}
+            checked={guestForm.bridesmaidGuest || false}
             onChange={handleFormChange}
           />
         </div>
@@ -274,7 +299,7 @@ export const GuestForm = (props: { onSubmit: () => void }) => {
             type="checkbox"
             id="groomsmenGuest"
             name="groomsmenGuest"
-            checked={guestForm.groomsmenGuest}
+            checked={guestForm.groomsmenGuest || false}
             onChange={handleFormChange}
           />
         </div>
@@ -284,7 +309,7 @@ export const GuestForm = (props: { onSubmit: () => void }) => {
             type="text"
             id="eventType"
             name="eventType"
-            value={guestForm.eventType}
+            value={guestForm.eventType || ""}
             onChange={handleFormChange}
           />
         </div>

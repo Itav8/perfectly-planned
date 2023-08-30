@@ -50,6 +50,9 @@ services:
       - backend
       - rabbitmq
     restart: always
+    environment:
+      SENDER_EMAIL: ${SENDER_EMAIL}
+      SENDER_PASSWORD: ${SENDER_PASSWORD}
 
 # Volumes for persisting data, see https://docs.docker.com/engine/reference/builder/#volume
 volumes:
