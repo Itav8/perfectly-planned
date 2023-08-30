@@ -181,6 +181,7 @@ export const Guests = () => {
           open={isEditModalOpen}
           onClose={() => {
             setIsEditModalOpen(false);
+            setSelectedGuest(undefined)
           }}
         >
           <GuestForm
@@ -188,6 +189,8 @@ export const Guests = () => {
             initialValues={selectedGuest}
             onSubmit={() => {
               fetchGuests();
+              setIsEditModalOpen(false)
+              setSelectedGuest(undefined);
             }}
           />
         </Modal>
