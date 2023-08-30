@@ -206,8 +206,7 @@ export const GuestForm = (props: GuestFormProps) => {
 
   return (
     <div className="guest-form__container">
-      <h1>Guest Form</h1>
-
+      <h1>{props.type === "create" ? "Create Guest" : "Edit Guest"}</h1>
       <form
         className="guest-form"
         onSubmit={(event) => {

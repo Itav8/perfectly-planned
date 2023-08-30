@@ -35,8 +35,8 @@ export const Guests = () => {
   const columns: GridColDef[] = [
     {
       field: "invite",
-      headerName: "Invite",
-      width: 150,
+      headerName: "",
+      width: 100,
       renderCell: (params) => {
         return (
           <button onClick={(e) => handleInvite(e, params.row.email)}>
@@ -47,8 +47,8 @@ export const Guests = () => {
     },
     {
       field: "edit",
-      headerName: "Edit",
-      width: 150,
+      headerName: "",
+      width: 100,
       renderCell: (params) => {
         return (
           <button
@@ -81,11 +81,14 @@ export const Guests = () => {
     },
     {
       field: "delete",
-      headerName: "Delete",
-      width: 150,
+      headerName: "",
+      width: 100,
       renderCell: (params) => {
         return (
-          <button onClick={(e) => handleDelete(e, params.row.guest_id)}>
+          <button
+            onClick={(e) => handleDelete(e, params.row.guest_id)}
+            style={{ backgroundColor: "#b91c1e" }}
+          >
             Delete
           </button>
         );
