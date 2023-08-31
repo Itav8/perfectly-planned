@@ -1,7 +1,5 @@
 import { useContext, useEffect, useState } from "react";
 
-import { AuthContext } from "../../hooks/useAuth/useAuth";
-
 interface GuestInviteProps {
   initialValue?: string;
   onSubmit?: () => void;
@@ -14,8 +12,6 @@ interface EmailForm {
 }
 
 export const GuestInviteForm = (props: GuestInviteProps) => {
-  const { userId } = useContext(AuthContext);
-
   const [emailForm, setEmailForm] = useState<EmailForm>({
     email: props.initialValue || "",
     subject: "You're invited!",
@@ -68,8 +64,6 @@ export const GuestInviteForm = (props: GuestInviteProps) => {
       console.log("Error inviting guest", error);
     }
   };
-
-  useEffect(() => {}, [userId]);
 
   return (
     <div>
