@@ -153,11 +153,14 @@ export const FindPlace = () => {
     };
 
     const fetchAllPhotos = async (photos: Array<Promise>) => {
-      //TODO: add try catch
-      setGooglePhotosLoading(true);
-      const response = await Promise.all(photos);
-      setGooglePhotosLoading(false);
-      setGooglePhotos(response);
+      try {
+        setGooglePhotosLoading(true);
+        const response = await Promise.all(photos);
+        setGooglePhotosLoading(false);
+        setGooglePhotos(response);
+      } catch (error) {
+        console.log("Error in fetching Google photos:", error);
+      }
     };
 
     if (selectedPlaceDetails?.photos?.length > 0) {
