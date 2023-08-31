@@ -1,7 +1,7 @@
-import { createContext, useEffect, useState } from "react";
+import { firebaseApp } from "./firebaseConfig";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
-import { firebaseApp } from "./firebaseConfig";
+import { createContext, useEffect, useState } from "react";
 
 interface AuthContextState {
   isLoggedIn: boolean;

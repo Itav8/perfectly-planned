@@ -1,11 +1,12 @@
 import { useState, useEffect, useContext, useCallback } from "react";
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
-import { GuestForm } from "./GuestForm";
-
 import { AuthContext } from "../../hooks/useAuth/useAuth";
+import { GuestForm } from "./GuestForm";
+import { GuestInviteForm } from "./GuestInviteForm";
 import { Modal } from "../../components/Modal/Modal";
 
 import "./Guest.css";
+
 export interface Guest {
   guest_id?: number;
   first_name: string;
@@ -30,6 +31,8 @@ export const Guests = () => {
 
   const [guests, setGuests] = useState<Guest[]>([]);
   const [selectedGuest, setSelectedGuest] = useState<Guest>();
+  const [selectedEmail, setSelectedEmail] = useState();
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const columns: GridColDef[] = [
@@ -39,7 +42,12 @@ export const Guests = () => {
       width: 100,
       renderCell: (params) => {
         return (
-          <button onClick={(e) => handleInvite(e, params.row.email)}>
+          <button
+            onClick={() => {
+              setIsEmailModalOpen(true);
+              setSelectedEmail(params.row.email);
+            }}
+          >
             Invite
           </button>
         );
@@ -145,39 +153,6 @@ export const Guests = () => {
     setIsModalOpen(false);
   };
 
-  const handleInvite = async (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    email: string
-  ) => {
-    event.preventDefault();
-
-    const inviteGuest = `${import.meta.env.VITE_API_URL}/guest/invite`;
-    const messageData = {
-      email: email,
-      // TODO: Make this dynamic
-      subject: "You're Invited!!",
-      message: "Welcome",
-    };
-
-    const fetchConfig = {
-      method: "post",
-      body: JSON.stringify(messageData),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-
-    try {
-      const inviteResponse = await fetch(inviteGuest, fetchConfig);
-
-      if (inviteResponse.ok) {
-        console.log("Success");
-      }
-    } catch (error) {
-      console.log("Error inviting guest", error);
-    }
-  };
-
   const handleDelete = async (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     guestId: number
@@ -236,6 +211,22 @@ export const Guests = () => {
               fetchGuests();
               setIsEditModalOpen(false);
               setSelectedGuest(undefined);
+            }}
+          />
+        </Modal>
+      ) : null}
+      {isEmailModalOpen ? (
+        <Modal
+          open={isEmailModalOpen}
+          onClose={() => {
+            setIsEmailModalOpen(false);
+          }}
+        >
+          <GuestInviteForm
+            initialValue={selectedEmail}
+            onSubmit={() => {
+              setSelectedEmail(undefined);
+              setIsEmailModalOpen(false);
             }}
           />
         </Modal>

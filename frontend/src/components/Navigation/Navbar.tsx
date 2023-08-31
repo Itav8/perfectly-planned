@@ -1,11 +1,11 @@
-import { NavLink } from "react-router-dom";
-import { authedRoutes, mainRoutes } from "../../routes/routes";
-
-import "./Navbar.css";
-import { useContext, useState } from "react";
 import { AuthContext } from "../../hooks/useAuth/useAuth";
 import { firebaseApp } from "../../hooks/useAuth/firebaseConfig";
+import { authedRoutes, mainRoutes } from "../../routes/routes";
+import { NavLink } from "react-router-dom";
+import { useContext, useState } from "react";
 import { Modal } from "../Modal/Modal";
+
+import "./Navbar.css";
 
 export const Navbar = () => {
   const { isLoggedIn, ...authData } = useContext(AuthContext);

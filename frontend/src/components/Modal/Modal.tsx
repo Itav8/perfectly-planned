@@ -1,4 +1,5 @@
 import "./Modal.css";
+
 interface ModalProps {
   open: boolean;
   onClose: () => void;

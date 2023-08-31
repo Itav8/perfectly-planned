@@ -1,7 +1,8 @@
 import { useState, useContext } from "react";
 import { AuthContext } from "../../hooks/useAuth/useAuth";
-import "./Guest.css";
 import { Guest } from "./Guests";
+
+import "./Guest.css";
 
 interface GuestFormProps {
   initialValues?: Guest;

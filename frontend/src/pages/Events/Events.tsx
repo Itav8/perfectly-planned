@@ -1,8 +1,8 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { Card } from "../../components/Card/Card";
-import { WeddingForm } from "./WeddingForm";
 import { AuthContext } from "../../hooks/useAuth/useAuth";
+import { Card } from "../../components/Card/Card";
 import { Modal } from "../../components/Modal/Modal";
+import { WeddingForm } from "./WeddingForm";
 
 import "./Event.css";
 
