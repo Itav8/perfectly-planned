@@ -1,8 +1,9 @@
-import { AuthContext } from "../../hooks/useAuth/useAuth";
 import { useContext, useEffect, useState } from "react";
 
+import { AuthContext } from "../../hooks/useAuth/useAuth";
+
 interface GuestInviteProps {
-  initialValues?: string;
+  initialValue?: string;
   onSubmit?: () => void;
 }
 
@@ -12,13 +13,13 @@ interface EmailForm {
   message: string;
 }
 
-export const GuestInvite = (props: GuestInviteProps) => {
+export const GuestInviteForm = (props: GuestInviteProps) => {
   const { userId } = useContext(AuthContext);
 
   const [emailForm, setEmailForm] = useState<EmailForm>({
-    email: "",
-    subject: "",
-    message: "",
+    email: props.initialValue || "",
+    subject: "You're invited!",
+    message: "You're cordially invited to my wedding.",
   });
 
   const handleFormChange = (
@@ -38,7 +39,7 @@ export const GuestInvite = (props: GuestInviteProps) => {
 
     const inviteGuest = `${import.meta.env.VITE_API_URL}/guest/invite`;
     const messageData = {
-      email: props.initialValues,
+      email: emailForm.email,
       subject: emailForm.subject,
       message: emailForm.message,
     };
@@ -61,7 +62,7 @@ export const GuestInvite = (props: GuestInviteProps) => {
           message: "",
         });
 
-        props.onSubmit;
+        if (props.onSubmit) props.onSubmit();
       }
     } catch (error) {
       console.log("Error inviting guest", error);
@@ -80,7 +81,7 @@ export const GuestInvite = (props: GuestInviteProps) => {
             type="email"
             id="email"
             name="email"
-            value={props.initialValues}
+            value={emailForm.email}
             onChange={handleFormChange}
           />
         </div>

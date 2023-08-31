@@ -1,4 +1,5 @@
 import "./Card.css";
+
 interface CardInfoProps {
   cardTitle?: string;
   cardDate?: string;
@@ -13,6 +14,7 @@ interface CardInfoProps {
   children?: React.ReactNode;
   onClick?: () => void;
 }
+
 export const Card = (props: CardInfoProps) => {
   return (
     <div className="card" onClick={props.onClick}>

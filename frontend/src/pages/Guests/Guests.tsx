@@ -1,12 +1,12 @@
 import { useState, useEffect, useContext, useCallback } from "react";
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
-import { GuestForm } from "./GuestForm";
-
 import { AuthContext } from "../../hooks/useAuth/useAuth";
+import { GuestForm } from "./GuestForm";
+import { GuestInviteForm } from "./GuestInviteForm";
 import { Modal } from "../../components/Modal/Modal";
 
 import "./Guest.css";
-import { GuestInvite } from "./GuestInvite";
+
 export interface Guest {
   guest_id?: number;
   first_name: string;
@@ -222,8 +222,8 @@ export const Guests = () => {
             setIsEmailModalOpen(false);
           }}
         >
-          <GuestInvite
-            initialValues={selectedEmail}
+          <GuestInviteForm
+            initialValue={selectedEmail}
             onSubmit={() => {
               setSelectedEmail(undefined);
               setIsEmailModalOpen(false);

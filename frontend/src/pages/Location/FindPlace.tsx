@@ -3,9 +3,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { useJsApiLoader, GoogleMap } from "@react-google-maps/api";
 import { Loader } from "../../components/Loader/Loader";
+import { SearchInput } from "../../components/SearchInput/SearchInput";
 
 import "./FindPlace.css";
-import { SearchInput } from "../../components/SearchInput/SearchInput";
 
 interface GooglePlacesResponse {
   description: string;
