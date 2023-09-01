@@ -1,5 +1,7 @@
 import json
 import os
+import time
+from pika.exceptions import AMQPConnectionError
 import pika
 import smtplib
 from email.message import EmailMessage
@@ -7,14 +9,17 @@ from email.message import EmailMessage
 SENDER_EMAIL = os.environ.get("SENDER_EMAIL")
 SENDER_PASSWORD = os.environ.get("SENDER_PASSWORD")
 
-queue = "email-task"
-
 
 # Consumer
 def consume_message():
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host="rabbitmq"))
+    # Set the hostname that we'll connect to
+    parameters = pika.ConnectionParameters(host="rabbitmq")
+    # Create a connection to RabbitMQ
+    connection = pika.BlockingConnection(parameters)
+    # Open a channel to RabbitMQ
     channel = connection.channel()
-
+    # Create a queue if it does not exist
+    queue = "email-task"
     channel.queue_declare(queue=queue)
 
     channel.basic_consume(queue=queue, on_message_callback=send_email, auto_ack=True)
@@ -64,4 +69,9 @@ def send_email(ch, method, properties, body):
 
 
 if __name__ == "__main__":
-    consume_message()
+    while True:
+        try:
+            consume_message()
+        except AMQPConnectionError:
+            print("Could not connect to RabbitMQ")
+            time.sleep(2.0)
