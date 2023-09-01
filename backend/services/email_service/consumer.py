@@ -1,7 +1,7 @@
 import json
 import os
 import time
-from aiormq import AMQPConnectionError
+from pika.exceptions import AMQPConnectionError
 import pika
 import smtplib
 from email.message import EmailMessage
