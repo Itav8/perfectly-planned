@@ -1,9 +1,12 @@
+import os
 import pika
 import json
 
+RABBITMQ_HOST = os.environ.get("RABBITMQ_HOST")
+
 
 def publish_message(message: dict = {}):
-    connection = pika.BlockingConnection(pika.ConnectionParameters("rabbitmq"))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(RABBITMQ_HOST))
     channel = connection.channel()
 
     queue = "email-task"

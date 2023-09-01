@@ -8,12 +8,13 @@ from email.message import EmailMessage
 
 SENDER_EMAIL = os.environ.get("SENDER_EMAIL")
 SENDER_PASSWORD = os.environ.get("SENDER_PASSWORD")
+RABBITMQ_HOST = os.environ.get("RABBITMQ_HOST")
 
 
 # Consumer
 def consume_message():
     # Set the hostname that we'll connect to
-    parameters = pika.ConnectionParameters(host="rabbitmq")
+    parameters = pika.ConnectionParameters(host=RABBITMQ_HOST)
     # Create a connection to RabbitMQ
     connection = pika.BlockingConnection(parameters)
     # Open a channel to RabbitMQ
