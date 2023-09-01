@@ -9,6 +9,7 @@ services:
       DATABASE_URL: postgresql://perfectly_planned:perfectly_planned_password@db:5432/perfectly_planned
       GOOGLE_MAPS_API_KEY: ${VITE_GOOGLE_MAPS_API_KEY}
       GOOGLE_URL: ${GOOGLE_URL}
+      RABBITMQ_HOST: ${RABBITMQ_HOST}
     depends_on:
       - db
   db:
@@ -40,10 +41,11 @@ services:
       VITE_GOOGLE_AUTH_APP_ID: ${VITE_GOOGLE_AUTH_APP_ID}
       VITE_GOOGLE_AUTH_MEASUREMENT_ID: ${VITE_GOOGLE_AUTH_MEASUREMENT_ID}
   rabbitmq:
-    image: rabbitmq:3
+    build: backend/services/rabbitmq
     container_name: rabbitmq
     ports:
       - "5672:5672"
+      - "15672:15672"
   email:
     build: backend/services/email_service
     depends_on:
@@ -53,6 +55,7 @@ services:
     environment:
       SENDER_EMAIL: ${SENDER_EMAIL}
       SENDER_PASSWORD: ${SENDER_PASSWORD}
+      RABBITMQ_HOST: ${RABBITMQ_HOST}
 
 # Volumes for persisting data, see https://docs.docker.com/engine/reference/builder/#volume
 volumes:
