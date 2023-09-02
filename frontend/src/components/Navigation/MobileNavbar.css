@@ -1,0 +1,48 @@
+.mobile-navbar {
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-navbar > .mobile-navbar__hamburger {
+  align-self: flex-end;  
+  margin: 10px;
+  color: #646cff;
+}
+
+.mobile-navbar__container {
+  background-color: white;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-navbar__links {
+  display: flex;
+  flex-direction: column;
+  font-size: 2rem;
+}
+
+.mobile-navbar__link {
+  margin: 10px 0;
+}
+
+.mobile-navbar__close {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  font-size: 2rem;
+  color: #646cff;
+  font-weight: bold;
+}
+
+.mobile-navbar__link--logout-photo {
+  border-radius: 50px;
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}

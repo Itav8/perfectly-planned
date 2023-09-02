@@ -1,3 +1,18 @@
 .layout__content {
   padding: 0 10%;
 }
+
+/* This only controls showing / hiding the different navbars */
+
+@media only screen and (max-width: 600px) {
+  .navbar {
+    display: none;
+  }
+}
+
+/* When screensize is over 600px (aka 601px) don't show mobile nav */
+@media only screen and (min-width: 601px) {
+  .mobile-navbar {
+    display: none;
+  }
+}
