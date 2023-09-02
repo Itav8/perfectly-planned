@@ -1,11 +1,17 @@
 video {
-  width: 100vw;
-  max-height: 75vh;
-  overflow: hidden;
-  position: absolute;
-  right: 0;
-  object-fit: cover;
-  object-position: center;
+  display: none;
+}
+
+@media only screen and (min-width: 601px) {
+  video {
+    width: 100vw;
+    max-height: 75vh;
+    overflow: hidden;
+    position: absolute;
+    right: 0;
+    object-fit: cover;
+    object-position: center;
+  }
 }
 
 .landing-content {
@@ -28,10 +34,6 @@ button {
 /* Mobile Screen Width - anything less than <= 600px */
 @media only screen and (max-width: 600px) {
   video {
-    display: none;
-  }
-
-  video > source {
     display: none;
   }
 
