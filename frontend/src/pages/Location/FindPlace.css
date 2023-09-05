@@ -19,3 +19,11 @@
 .find-places__map {
   margin-top: 30px;
 }
+
+/* Mobile Screen Width - anything less than <= 600px */
+@media only screen and (max-width: 600px) {
+  .find-places__dashboard {
+    display: flex;
+    flex-direction: column;
+  }
+}
