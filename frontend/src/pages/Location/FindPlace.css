@@ -18,6 +18,8 @@
 
 .find-places__map {
   margin-top: 30px;
+  height: 600px;
+  width: 600px;
 }
 
 /* Mobile Screen Width - anything less than <= 600px */
@@ -25,5 +27,10 @@
   .find-places__dashboard {
     display: flex;
     flex-direction: column;
+  }
+
+  .find-places__map {
+    width: 400px;
+    height: 400px;
   }
 }
