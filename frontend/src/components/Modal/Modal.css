@@ -3,13 +3,11 @@
   position: absolute;
   top: 100px;
   border-radius: 10px;
-
 }
 
 .modal__content {
   display: flex;
   flex-direction: column;
-
   width: 400px;
   min-height: 200px;
   padding: 10px;
@@ -26,4 +24,8 @@
   height: 50px;
 }
 
-
+@media only screen and (max-width: 600px) {
+  .modal__content {
+    width: 100%;
+  }
+}

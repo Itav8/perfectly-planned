@@ -246,10 +246,6 @@ export const FindPlace = () => {
         {isLoaded ? (
           <GoogleMap
             mapContainerClassName="find-places__map"
-            mapContainerStyle={{
-              width: "600px",
-              height: "600px",
-            }}
             center={center}
             zoom={2}
             onLoad={onLoad}

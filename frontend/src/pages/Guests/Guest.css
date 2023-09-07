@@ -38,7 +38,7 @@
   width: 100%;
 }
 
-.guest-form__checkbox > input {
+.guest-form__checkbox>input {
   width: 20px;
   height: 20px;
 }
@@ -46,3 +46,4 @@
 .guest-form__button {
   margin-top: 20px;
 }
+
