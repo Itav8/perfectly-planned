@@ -61,7 +61,7 @@ export const MobileNavbar = () => {
                     className="mobile-navbar__link"
                     onClick={() => {
                       setIsModalOpen(true);
-                      setMenuOpen(true);
+                      setMenuOpen(false);
                     }}
                   >
                     Logout
